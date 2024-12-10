@@ -19,11 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MastermemeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(Modifier.padding(innerPadding)) {
-
-                    }
-                }
+                MasterMemeApp(Modifier.fillMaxSize())
             }
         }
     }
