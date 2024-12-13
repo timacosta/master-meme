@@ -12,10 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.acostim.mastermeme.navigation.AppNavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MasterMemeApp(modifier: Modifier = Modifier) {
+fun MasterMemeApp(
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -36,8 +42,9 @@ fun MasterMemeApp(modifier: Modifier = Modifier) {
             }
         }
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding)) {
-
-        }
+        AppNavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }

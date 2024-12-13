@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MastermemeTheme {
-                MasterMemeApp(Modifier.fillMaxSize())
+                MasterMemeApp(modifier = Modifier.fillMaxSize())
             }
         }
     }
