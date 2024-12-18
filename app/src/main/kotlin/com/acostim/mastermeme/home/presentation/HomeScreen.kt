@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
+import com.acostim.mastermeme.ui.theme.MastermemeTheme
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.align(Alignment.Center),
@@ -30,5 +32,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
             Text("Tap + button to create your first meme")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    MastermemeTheme {
+        HomeScreen()
     }
 }
