@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -27,8 +26,8 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemeListRoute(
-    navigateToCreateMeme: () -> Unit,
-    viewModel: HomeViewModel = koinViewModel(),
+    navigateToCreateMeme: (String) -> Unit,
+    viewModel: MemeListViewModel = koinViewModel(),
 ) {
 
     val memeTemplates by viewModel.memeTemplates.collectAsStateWithLifecycle()

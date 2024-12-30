@@ -1,6 +1,7 @@
 package com.acostim.mastermeme
 
 import android.app.Application
+import com.acostim.mastermeme.di.dataModule
 import com.acostim.mastermeme.di.presentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -13,7 +14,8 @@ class App: Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                presentationModule
+                presentationModule,
+                dataModule
             )
         }
     }

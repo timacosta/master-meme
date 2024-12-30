@@ -1,9 +1,15 @@
 package com.acostim.mastermeme.di
 
-import com.acostim.mastermeme.memeList.presentation.HomeViewModel
+import com.acostim.mastermeme.memeList.data.MemesTemplateRepository
+import com.acostim.mastermeme.memeList.presentation.MemeListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val presentationModule = module {
-    viewModelOf(::HomeViewModel)
+    viewModelOf(::MemeListViewModel)
+}
+
+val dataModule = module {
+    singleOf(::MemesTemplateRepository)
 }

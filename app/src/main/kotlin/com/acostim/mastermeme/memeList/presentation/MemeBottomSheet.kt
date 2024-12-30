@@ -2,7 +2,6 @@ package com.acostim.mastermeme.memeList.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,21 +18,21 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
-import com.acostim.mastermeme.ui.theme.MastermemeTheme
+import com.acostim.mastermeme.ui.loadBitmapFromResources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemeBottomSheet(
     sheetState: SheetState,
     showBottomSheet: (Boolean) -> Unit,
-    memeTemplates: List<Int>,
-    onCardClick: () -> Unit
+    memeTemplates: List<String>,
+    onCardClick: (String) -> Unit
 ) {
     ModalBottomSheet(
         modifier = Modifier
@@ -52,10 +51,13 @@ fun MemeBottomSheet(
 
 @Composable
 private fun ModalSheetContent(
-    memeTemplates: List<Int>,
-    onCardClick: () -> Unit
+    memeTemplates: List<String>,
+    onCardClick: (String) -> Unit
 ) {
-    Text(stringResource(R.string.choose_template_title), modifier = Modifier.padding(horizontal = 16.dp))
+    Text(
+        stringResource(R.string.choose_template_title),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
 
     Text(stringResource(R.string.choose_template_content), modifier = Modifier.padding(16.dp))
 
@@ -65,40 +67,27 @@ private fun ModalSheetContent(
         verticalItemSpacing = 16.dp,
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(memeTemplates) {
+        items(memeTemplates) { path ->
             Card(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                onClick = onCardClick
+                onClick = {
+                    onCardClick(path)
+                }
             ) {
-                Image(
-                    painter = painterResource(it),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
+                val bitmap = loadBitmapFromResources(LocalContext.current, path)
+
+                bitmap?.let { bitmap ->
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewMemeBottomSheet() {
-    val memes = listOf(
-        R.drawable.soh_20,
-        R.drawable.zoa8_15,
-        R.drawable.p2is_38
-    )
-
-    MastermemeTheme {
-        Column {
-            ModalSheetContent(
-                memeTemplates = memes,
-                onCardClick = {}
-            )
         }
     }
 }
