@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.home.presentation
+package com.acostim.mastermeme.memeList.presentation
 
 import androidx.lifecycle.ViewModel
 import com.acostim.mastermeme.R
