@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.acostim.mastermeme.ui.theme.ChineseBlack
+import com.acostim.mastermeme.ui.theme.Background
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.auto(ChineseBlack.toArgb(), ChineseBlack.toArgb())
+            navigationBarStyle = SystemBarStyle.auto(Background.toArgb(), Background.toArgb())
         )
         setContent {
             MastermemeTheme {

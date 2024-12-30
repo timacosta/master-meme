@@ -39,7 +39,9 @@ fun EmptyMemeScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        Text(stringResource(R.string.empty_memes))
+        Text(
+            stringResource(R.string.empty_memes)
+        )
     }
 }
 
