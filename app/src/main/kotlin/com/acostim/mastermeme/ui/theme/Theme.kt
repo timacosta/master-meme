@@ -16,7 +16,6 @@ private val colorScheme = darkColorScheme(
 fun MastermemeTheme(
     content: @Composable () -> Unit
 ) {
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
