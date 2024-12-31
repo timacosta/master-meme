@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.memeList.data
+package com.acostim.mastermeme.core.data
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ class MemesTemplateRepository(private val context: Context) {
         return withContext(Dispatchers.IO) {
             context.assets.list("$TEMPLATE_DIR/")?.map { name ->
                 "$TEMPLATE_DIR/$name"
-            } ?: emptyList()
+            }.orEmpty()
         }
     }
 }

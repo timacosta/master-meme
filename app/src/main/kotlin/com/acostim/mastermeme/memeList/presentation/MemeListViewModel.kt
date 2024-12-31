@@ -2,7 +2,7 @@ package com.acostim.mastermeme.memeList.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.acostim.mastermeme.memeList.data.MemesTemplateRepository
+import com.acostim.mastermeme.core.data.MemesTemplateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

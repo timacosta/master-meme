@@ -36,6 +36,10 @@ val manropeFontFamily = FontFamily(
     ),
 )
 
+val Impact = FontFamily(
+    Font(R.font.impact)
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = manropeFontFamily,
