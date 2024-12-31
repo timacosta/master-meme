@@ -2,6 +2,7 @@ package com.acostim.mastermeme.createMeme.presentation
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,8 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -110,7 +116,8 @@ fun CreateMemeScreen(
     Box(modifier.fillMaxSize()) {
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.Center)
         ) {
             bitmap?.let { bitmap ->
                 Image(
@@ -123,9 +130,12 @@ fun CreateMemeScreen(
         }
 
         memeDecors.forEach { memeDecor ->
-            EditableTextField(memeDecor = memeDecor, onDrag = { newOffset ->
-                updateMemeDecorOffset(memeDecor.id, newOffset)
-            })
+            EditableTextField(
+                memeDecor = memeDecor,
+                onDrag = { newOffset ->
+                    updateMemeDecorOffset(memeDecor.id, newOffset)
+                }
+            )
         }
 
         TextButton(
@@ -167,6 +177,32 @@ private fun EditableTextField(
                         }
                     )
                 }
+                .drawWithContent {
+                    drawContent()
+
+                    val borderDimens = 2.dp.toPx()
+                    val totalSize = size.copy(
+                        width = size.width + borderDimens * 2,
+                        height = size.height + borderDimens * 2
+                    )
+                    val borderOffset = Offset(-borderDimens, -borderDimens)
+
+                    drawRect(
+                        color = Color.White,
+                        size = totalSize,
+                        topLeft = borderOffset,
+                        style = Stroke(width = borderDimens)
+                    )
+
+                    val circleRadius = totalSize.minDimension / 4.0f
+
+                    drawCircle(
+                        color = Color.Red,
+                        radius = circleRadius,
+                        center = Offset(x = totalSize.width, y = 0.0f)
+                    )
+                }
+            ,
         )
     }
 }
@@ -175,3 +211,28 @@ data class MemeDecor(
     val id: String = UUID.randomUUID().toString(),
     val offset: IntOffset
 )
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEditableTextField() {
+    var memeDecor by remember {
+        mutableStateOf(
+            MemeDecor(
+                offset = IntOffset(0, 0)
+            )
+        )
+    }
+    Column(Modifier.fillMaxSize().background(Color.Gray)) {
+        EditableTextField(
+            memeDecor = memeDecor,
+            onDrag = {
+                memeDecor = memeDecor.copy(
+                    offset = memeDecor.offset.copy(
+                        x = memeDecor.offset.x + it.x, y = memeDecor.offset.y + it.y
+                    )
+                )
+            }
+        )
+    }
+}

@@ -16,11 +16,19 @@ class CreateMemeViewModel : ViewModel() {
         id: String,
         newOffset: IntOffset,
     ) {
-        //TODO: Not updating. To be checked
-        val currentMemeDecor = memeDecorItems.find { it.id == id }
-        currentMemeDecor?.offset?.copy(
-            x = currentMemeDecor.offset.x + newOffset.x,
-            y = currentMemeDecor.offset.y + newOffset.y
-        )
+        val index = memeDecorItems.indexOfFirst { it.id == id }
+
+        if (index != -1) {
+            val currentMemeDecor = memeDecorItems[index]
+
+            val updatedOffset = currentMemeDecor.offset.copy(
+                x = currentMemeDecor.offset.x + newOffset.x,
+                y = currentMemeDecor.offset.y + newOffset.y
+            )
+
+            val updatedMemeDecor = currentMemeDecor.copy(offset = updatedOffset)
+
+            memeDecorItems[index] = updatedMemeDecor
+        }
     }
 }
