@@ -3,6 +3,7 @@ package com.acostim.mastermeme.createMeme.presentation
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -44,7 +43,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import org.koin.androidx.compose.koinViewModel
@@ -155,54 +153,39 @@ private fun EditableTextField(
 ) {
     var value by remember { mutableStateOf("") }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(
+        Modifier
+            .offset { memeDecor.offset }
+            .border(width = 1.dp, Color.White)
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        onDrag(
+                            IntOffset(
+                                dragAmount.x.toInt(),
+                                dragAmount.y.toInt()
+                            )
+                        )
+                    }
+                )
+            }
+    ) {
         TextField(
             value = value,
             onValueChange = {
                 value = it
             },
-            modifier = Modifier
-                .offset {
-                    memeDecor.offset
-                }
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDrag = { change, dragAmount ->
-                            change.consume()
-                            onDrag(
-                                IntOffset(
-                                    dragAmount.x.toInt(), dragAmount.y.toInt()
-                                )
-                            )
-                        }
-                    )
-                }
-                .drawWithContent {
-                    drawContent()
-
-                    val borderDimens = 2.dp.toPx()
-                    val totalSize = size.copy(
-                        width = size.width + borderDimens * 2,
-                        height = size.height + borderDimens * 2
-                    )
-                    val borderOffset = Offset(-borderDimens, -borderDimens)
-
-                    drawRect(
-                        color = Color.White,
-                        size = totalSize,
-                        topLeft = borderOffset,
-                        style = Stroke(width = borderDimens)
-                    )
-
-                    val circleRadius = totalSize.minDimension / 4.0f
-
-                    drawCircle(
-                        color = Color.Red,
-                        radius = circleRadius,
-                        center = Offset(x = totalSize.width, y = 0.0f)
-                    )
-                }
-            ,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.Transparent,
+                unfocusedTextColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
         )
     }
 }
@@ -223,7 +206,11 @@ fun PreviewEditableTextField() {
             )
         )
     }
-    Column(Modifier.fillMaxSize().background(Color.Gray)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Gray)
+    ) {
         EditableTextField(
             memeDecor = memeDecor,
             onDrag = {
