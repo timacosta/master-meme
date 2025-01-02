@@ -12,6 +12,18 @@ class CreateMemeViewModel : ViewModel() {
         memeDecorItems.add(memeDecor)
     }
 
+    fun onValueChange(id: String, value: String) {
+        val index = memeDecorItems.indexOfFirst { it.id == id }
+
+        if (index != -1) {
+            val currentMemeDecor = memeDecorItems[index]
+
+            val updatedMemeDecor = currentMemeDecor.copy(text = value)
+
+            memeDecorItems[index] = updatedMemeDecor
+        }
+    }
+
     fun updateMemeDecorOffset(
         id: String,
         newOffset: IntOffset,
@@ -21,12 +33,7 @@ class CreateMemeViewModel : ViewModel() {
         if (index != -1) {
             val currentMemeDecor = memeDecorItems[index]
 
-            val updatedOffset = currentMemeDecor.offset.copy(
-                x = currentMemeDecor.offset.x + newOffset.x,
-                y = currentMemeDecor.offset.y + newOffset.y
-            )
-
-            val updatedMemeDecor = currentMemeDecor.copy(offset = updatedOffset)
+            val updatedMemeDecor = currentMemeDecor.copy(offset = newOffset)
 
             memeDecorItems[index] = updatedMemeDecor
         }
