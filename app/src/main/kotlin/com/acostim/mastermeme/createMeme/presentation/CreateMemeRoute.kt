@@ -1,24 +1,28 @@
 package com.acostim.mastermeme.createMeme.presentation
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,9 +31,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,18 +45,16 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import com.acostim.mastermeme.ui.theme.Impact
+import com.acostim.mastermeme.ui.theme.PrimaryContainer
 import org.koin.androidx.compose.koinViewModel
 import java.util.UUID
 
@@ -72,7 +72,6 @@ fun CreateMemeRoute(
     LaunchedEffect(path) {
         bitmap = loadBitmapFromResources(context, path)
     }
-
 
     Scaffold(
         topBar = {
@@ -168,13 +167,32 @@ fun CreateMemeScreen(
             }
         }
 
-        TextButton(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = {
-                addMemeDecor()
-            }) {
-            Text("Add text")
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        ) {
+            OutlinedButton(
+                border = BorderStroke(1.dp, PrimaryContainer),
+                shape = RoundedCornerShape(10),
+                onClick = {
+                    addMemeDecor()
+                }
+            ) {
+                Text("Add text")
+            }
+
+            Button(
+                onClick = {
+                }
+            ) {
+                Text("Save meme")
+            }
         }
+
+
     }
 }
 
