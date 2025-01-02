@@ -5,4 +5,6 @@
     <string name="choose_template_title">Choose template</string>
     <string name="choose_template_content">Choose template for your next meme masterpiece</string>
     <string name="create_memes_topbar">New meme</string>
+    <string name="add_text_button">Add text</string>
+    <string name="save_meme_button">Save meme</string>
 </resources>

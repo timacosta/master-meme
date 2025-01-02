@@ -3,7 +3,9 @@ package com.acostim.mastermeme.createMeme.presentation
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,18 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import com.acostim.mastermeme.ui.theme.Impact
@@ -181,14 +184,14 @@ fun CreateMemeScreen(
                     addMemeDecor()
                 }
             ) {
-                Text("Add text")
+                Text(stringResource(R.string.add_text_button))
             }
 
             Button(
                 onClick = {
                 }
             ) {
-                Text("Save meme")
+                Text(stringResource(R.string.save_meme_button))
             }
         }
 
@@ -237,23 +240,46 @@ private fun EditableTextField(
                 textFieldSize = size
             }
     ) {
-        TextField(
-            value = memeDecor.text,
-            onValueChange = {
-                onValueChange(memeDecor.id, it)
-            },
-            textStyle = TextStyle(fontFamily = memeDecor.fontFamily, color = Color.White),
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = Color.Transparent,
-                unfocusedTextColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            ),
-        )
+        Box {
+            TextField(
+                value = memeDecor.text,
+                onValueChange = {
+                    onValueChange(memeDecor.id, it)
+                },
+                textStyle = TextStyle(fontFamily = memeDecor.fontFamily, color = Color.White),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Transparent,
+                    unfocusedTextColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .offset {
+                    IntOffset(
+                        x = textFieldSize.width - 12.dp.roundToPx(),
+                        y = -12.dp.roundToPx()
+                    )
+                }
+                .clip(CircleShape)
+                .background(Color.Red)
+                .zIndex(1f)
+
+        ) {
+            Icon( // Use Icon instead of Text
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
     }
 }
 
