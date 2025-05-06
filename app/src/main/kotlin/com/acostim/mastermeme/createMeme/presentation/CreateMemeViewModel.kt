@@ -1,26 +1,34 @@
 package com.acostim.mastermeme.createMeme.presentation
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
+import com.acostim.mastermeme.core.presentation.UiText
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class CreateMemeViewModel : ViewModel() {
 
-    val memeDecorItems = mutableStateListOf<MemeDecor>()
+    private val _state: MutableStateFlow<CreateMemeState> = MutableStateFlow(CreateMemeState())
+    val state = _state.asStateFlow()
 
     fun addMemeDecor(memeDecor: MemeDecor) {
-        memeDecorItems.add(memeDecor)
+        _state.update {
+            it.copy(memeDecors = it.memeDecors + memeDecor)
+        }
     }
 
     fun onValueChange(id: String, value: String) {
-        val index = memeDecorItems.indexOfFirst { it.id == id }
+        _state.update { currentState ->
+            val updatedList = currentState.memeDecors.map { memeDecor ->
+                if (memeDecor.id == id) {
+                    memeDecor.copy(text = UiText.DynamicString(value))
+                } else {
+                    memeDecor
+                }
+            }
 
-        if (index != -1) {
-            val currentMemeDecor = memeDecorItems[index]
-
-            val updatedMemeDecor = currentMemeDecor.copy(text = value)
-
-            memeDecorItems[index] = updatedMemeDecor
+            currentState.copy(memeDecors = updatedList)
         }
     }
 
@@ -28,14 +36,15 @@ class CreateMemeViewModel : ViewModel() {
         id: String,
         newOffset: IntOffset,
     ) {
-        val index = memeDecorItems.indexOfFirst { it.id == id }
-
-        if (index != -1) {
-            val currentMemeDecor = memeDecorItems[index]
-
-            val updatedMemeDecor = currentMemeDecor.copy(offset = newOffset)
-
-            memeDecorItems[index] = updatedMemeDecor
+        _state.update { currentState ->
+            val updatedList = currentState.memeDecors.map { memeDecor ->
+                if (memeDecor.id == id) {
+                    memeDecor.copy(offset = newOffset)
+                } else {
+                    memeDecor
+                }
+            }
+            currentState.copy(memeDecors = updatedList)
         }
     }
 }

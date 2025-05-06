@@ -54,7 +54,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
+import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import com.acostim.mastermeme.ui.theme.Impact
 import com.acostim.mastermeme.ui.theme.PrimaryContainer
@@ -71,6 +73,8 @@ fun CreateMemeRoute(
 
     var bitmap: Bitmap? by remember { mutableStateOf(null) }
     val context = LocalContext.current
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(path) {
         bitmap = loadBitmapFromResources(context, path)
@@ -96,7 +100,7 @@ fun CreateMemeRoute(
         CreateMemeScreen(
             bitmap = bitmap,
             modifier = Modifier.padding(innerPadding),
-            memeDecors = viewModel.memeDecorItems,
+            memeDecors = state.memeDecors,
             addMemeDecor = {
                 viewModel.addMemeDecor(
                     MemeDecor(
@@ -126,7 +130,6 @@ fun CreateMemeScreen(
     addMemeDecor: () -> Unit,
     updateMemeDecorOffset: (String, IntOffset) -> Unit,
 ) {
-
     Box(modifier.fillMaxSize()) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -242,7 +245,7 @@ private fun EditableTextField(
     ) {
         Box {
             TextField(
-                value = memeDecor.text,
+                value = memeDecor.text.asString(),
                 onValueChange = {
                     onValueChange(memeDecor.id, it)
                 },
@@ -274,7 +277,7 @@ private fun EditableTextField(
                 .zIndex(1f)
 
         ) {
-            Icon( // Use Icon instead of Text
+            Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = null,
                 tint = Color.White
@@ -282,10 +285,3 @@ private fun EditableTextField(
         }
     }
 }
-
-data class MemeDecor(
-    val id: String = UUID.randomUUID().toString(),
-    val text: String = "Tap twice to edit",
-    val offset: IntOffset,
-    val fontFamily: FontFamily = Impact
-)
