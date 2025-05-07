@@ -164,8 +164,10 @@ fun MemeEditorScreen(
 
         MemeEditorBottomBar(
             modifier = Modifier.align(Alignment.BottomCenter),
+            onUndo = {},
+            onRedo = {},
             onAddMemeDecor = {},
-            saveMeme = {}
+            onSaveMeme = {}
         )
     }
 }
