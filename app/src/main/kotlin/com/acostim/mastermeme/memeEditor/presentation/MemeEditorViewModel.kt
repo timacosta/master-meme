@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.createMeme.presentation
+package com.acostim.mastermeme.memeEditor.presentation
 
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
@@ -7,12 +7,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class CreateMemeViewModel : ViewModel() {
+class MemeEditorViewModel : ViewModel() {
 
     private val _state: MutableStateFlow<CreateMemeState> = MutableStateFlow(CreateMemeState())
     val state = _state.asStateFlow()
 
-    fun addMemeDecor(memeDecor: MemeDecor) {
+    fun onAction(action: MemeEditorAction) {
+        when (action) {
+            is MemeEditorAction.AddMemeDecor -> addMemeDecor(memeDecor = action.memeDecor)
+            is MemeEditorAction.UpdateMemeDecor -> updateMemeDecorOffset(
+                id = action.memeDecorId,
+                newOffset = action.newOffset
+            )
+        }
+    }
+
+    private fun addMemeDecor(memeDecor: MemeDecor) {
         _state.update {
             it.copy(memeDecors = it.memeDecors + memeDecor)
         }
@@ -32,7 +42,7 @@ class CreateMemeViewModel : ViewModel() {
         }
     }
 
-    fun updateMemeDecorOffset(
+    private fun updateMemeDecorOffset(
         id: String,
         newOffset: IntOffset,
     ) {

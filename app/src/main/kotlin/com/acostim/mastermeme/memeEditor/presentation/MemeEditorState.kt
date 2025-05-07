@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.createMeme.presentation
+package com.acostim.mastermeme.memeEditor.presentation
 
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.IntOffset
@@ -10,7 +10,6 @@ import java.util.UUID
 data class CreateMemeState(
     val memeDecors: List<MemeDecor> = emptyList()
 )
-
 
 data class MemeDecor(
     val id: String = UUID.randomUUID().toString(),

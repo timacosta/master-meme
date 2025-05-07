@@ -6,17 +6,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.acostim.mastermeme.createMeme.presentation.CreateMemeRoute
+import com.acostim.mastermeme.memeEditor.presentation.MemeEditorRoute
 import com.acostim.mastermeme.memeList.presentation.MemeListRoute
 import kotlinx.serialization.Serializable
 
 
 sealed interface Destinations {
     @Serializable
-    data object MemeList: Destinations
+    data object MemeList : Destinations
 
     @Serializable
-    data class CreateMeme(val path: String): Destinations
+    data class MemeEditor(val path: String) : Destinations
 }
 
 @Composable
@@ -32,16 +32,19 @@ fun AppNavHost(
         composable<Destinations.MemeList> {
             MemeListRoute(
                 navigateToCreateMeme = { path ->
-                    navController.navigate(Destinations.CreateMeme(path))
+                    navController.navigate(Destinations.MemeEditor(path))
                 }
             )
         }
 
-        composable<Destinations.CreateMeme> { backStackEntry ->
-            val route = backStackEntry.toRoute<Destinations.CreateMeme>()
-            CreateMemeRoute(path = route.path, onNavigateUp = {
-                navController.navigateUp()
-            })
+        composable<Destinations.MemeEditor> { backStackEntry ->
+            val route = backStackEntry.toRoute<Destinations.MemeEditor>()
+            MemeEditorRoute(
+                path = route.path,
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }

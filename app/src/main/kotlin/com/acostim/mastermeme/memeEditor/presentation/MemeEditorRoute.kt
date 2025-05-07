@@ -1,26 +1,20 @@
-package com.acostim.mastermeme.createMeme.presentation
+package com.acostim.mastermeme.memeEditor.presentation
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -44,15 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.loadBitmapFromResources
-import com.acostim.mastermeme.ui.theme.PrimaryContainer
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateMemeRoute(
+fun MemeEditorRoute(
     path: String,
     onNavigateUp: () -> Unit,
-    viewModel: CreateMemeViewModel = koinViewModel()
+    viewModel: MemeEditorViewModel = koinViewModel()
 ) {
 
     var bitmap: Bitmap? by remember { mutableStateOf(null) }
@@ -81,24 +74,25 @@ fun CreateMemeRoute(
             )
         },
     ) { innerPadding ->
-        CreateMemeScreen(
+        MemeEditorScreen(
             bitmap = bitmap,
             modifier = Modifier.padding(innerPadding),
             memeDecors = state.memeDecors,
             addMemeDecor = {
-                viewModel.addMemeDecor(
-                    MemeDecor(
-                        offset = IntOffset(x = 0, y = 0)
+                viewModel.onAction(
+                    MemeEditorAction.AddMemeDecor(
+                        memeDecor = MemeDecor(
+                            offset = IntOffset(x = 0, y = 0)
+                        )
                     )
                 )
             },
-            onValueChange = { id, newText ->
-                viewModel.onValueChange(id, newText)
-            },
             updateMemeDecorOffset = { id, newOffset ->
-                viewModel.updateMemeDecorOffset(
-                    id,
-                    newOffset
+                viewModel.onAction(
+                    MemeEditorAction.UpdateMemeDecor(
+                        memeDecorId = id,
+                        newOffset = newOffset
+                    )
                 )
             }
         )
@@ -106,11 +100,10 @@ fun CreateMemeRoute(
 }
 
 @Composable
-fun CreateMemeScreen(
+fun MemeEditorScreen(
     bitmap: Bitmap?,
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
-    onValueChange: (String, String) -> Unit,
     addMemeDecor: () -> Unit,
     updateMemeDecorOffset: (String, IntOffset) -> Unit,
 ) {
@@ -154,12 +147,14 @@ fun CreateMemeScreen(
                             memeDecor = memeDecor,
                             parentWidth = imageWidth,
                             parentHeight = imageHeight,
-                            onValueChange = onValueChange,
                             onDrag = { newOffset ->
                                 updateMemeDecorOffset(
                                     memeDecor.id,
                                     newOffset
                                 )
+                            },
+                            onRemove = {
+
                             }
                         )
                     }
@@ -167,29 +162,10 @@ fun CreateMemeScreen(
             }
         }
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            OutlinedButton(
-                border = BorderStroke(1.dp, PrimaryContainer),
-                shape = RoundedCornerShape(10),
-                onClick = {
-                    addMemeDecor()
-                }
-            ) {
-                Text(stringResource(R.string.add_text_button))
-            }
-
-            Button(
-                onClick = {
-                }
-            ) {
-                Text(stringResource(R.string.save_meme_button))
-            }
-        }
+        MemeEditorBottomBar(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onAddMemeDecor = {},
+            saveMeme = {}
+        )
     }
 }
