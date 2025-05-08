@@ -39,7 +39,7 @@ fun EditableTextField(
     parentWidth: Int,
     parentHeight: Int,
     onDrag: (IntOffset) -> Unit,
-    onRemove: () -> Unit
+    onRemove: (id: String) -> Unit
 ) {
     val iconSize = 20.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
@@ -97,7 +97,7 @@ fun EditableTextField(
                     .background(Color.Red)
                     .align(Alignment.TopEnd),
                 onClick = {
-                    onRemove()
+                    onRemove(memeDecor.id)
                 }
             ) {
                 Icon(

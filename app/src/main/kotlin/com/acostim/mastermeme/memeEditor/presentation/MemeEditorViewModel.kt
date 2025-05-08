@@ -15,6 +15,7 @@ class MemeEditorViewModel : ViewModel() {
     fun onAction(action: MemeEditorAction) {
         when (action) {
             is MemeEditorAction.AddMemeDecor -> addMemeDecor(memeDecor = action.memeDecor)
+            is MemeEditorAction.RemoveMemeDecor -> removeMemeDecor(id = action.id)
             is MemeEditorAction.UpdateMemeDecor -> updateMemeDecorOffset(
                 id = action.memeDecorId,
                 newOffset = action.newOffset
@@ -25,6 +26,12 @@ class MemeEditorViewModel : ViewModel() {
     private fun addMemeDecor(memeDecor: MemeDecor) {
         _state.update {
             it.copy(memeDecors = it.memeDecors + memeDecor)
+        }
+    }
+
+    private fun removeMemeDecor(id: String) {
+        _state.update { currentState ->
+            currentState.copy(memeDecors = currentState.memeDecors.filter { it.id != id })
         }
     }
 

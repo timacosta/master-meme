@@ -1,6 +1,10 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,19 +15,24 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 import com.acostim.mastermeme.ui.theme.OnPrimaryFixed
 import com.acostim.mastermeme.ui.theme.PrimaryContainer
+import com.acostim.mastermeme.ui.theme.Surface
+import com.acostim.mastermeme.ui.theme.SurfaceContainer
 
 @Composable
 fun MemeEditorBottomBar(
@@ -33,81 +42,82 @@ fun MemeEditorBottomBar(
     onAddMemeDecor: () -> Unit,
     onSaveMeme: () -> Unit
 ) {
-    Row(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .background(SurfaceContainer)
     ) {
+        val isCompact = maxWidth < 360.dp
 
-        IconButton(
-            onClick = {
-                onUndo()
-            }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_undo),
-                contentDescription = null,
-                tint = Color.Unspecified,
-            )
-        }
-
-        IconButton(
-            onClick = {
-                onRedo()
+            Row {
+                IconButton(onClick = onUndo) {
+                    Icon(painterResource(R.drawable.ic_undo), contentDescription = null, tint = Color.Unspecified)
+                }
+                IconButton(onClick = onRedo) {
+                    Icon(painterResource(R.drawable.ic_redo), contentDescription = null, tint = Color.Unspecified)
+                }
             }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_redo),
-                tint = Color.Unspecified,
-                contentDescription = null
-            )
-        }
 
-        Spacer(Modifier.weight(1f))
-
-        OutlinedButton(
-            border = BorderStroke(1.dp, PrimaryContainer),
-            shape = RoundedCornerShape(10.dp),
-            onClick = {
-                onAddMemeDecor()
+            if (isCompact) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AddTextButton(onAddMemeDecor)
+                    SaveButton(onSaveMeme)
+                }
+            } else {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    AddTextButton(onAddMemeDecor)
+                    SaveButton(onSaveMeme)
+                }
             }
-        ) {
-            Text(
-                text = stringResource(R.string.add_text_button),
-                fontWeight = FontWeight.Bold
-            )
-        }
 
-        Spacer(Modifier.width(8.dp))
-
-        OutlinedButton(
-            border = BorderStroke(1.dp, PrimaryContainer),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = PrimaryContainer
-            ),
-            onClick = {
-                onSaveMeme()
-            }
-        ) {
-            Text(
-                text = stringResource(R.string.save_meme_button),
-                color = OnPrimaryFixed,
-                fontWeight = FontWeight.Bold
-            )
+            Spacer(Modifier.width(8.dp))
         }
     }
 }
 
-@Preview
+@Composable
+private fun AddTextButton(onClick: () -> Unit) {
+    OutlinedButton(
+        border = BorderStroke(1.dp, PrimaryContainer),
+        shape = RoundedCornerShape(10.dp),
+        onClick = onClick
+    ) {
+        Text(text = stringResource(R.string.add_text_button), fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+private fun SaveButton(onClick: () -> Unit) {
+    OutlinedButton(
+        border = BorderStroke(1.dp, PrimaryContainer),
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.outlinedButtonColors(containerColor = PrimaryContainer),
+        onClick = onClick
+    ) {
+        Text(
+            text = stringResource(R.string.save_meme_button),
+            fontWeight = FontWeight.Bold,
+            color = OnPrimaryFixed
+        )
+    }
+}
+
+@PreviewScreenSizes
 @Composable
 private fun MemeEditorBottomBarPreview() {
     MastermemeTheme {
-        MemeEditorBottomBar(
-            onUndo = {},
-            onRedo = {},
-            onAddMemeDecor = {},
-            onSaveMeme = {}
-        )
+        Surface {
+            MemeEditorBottomBar(
+                onUndo = {},
+                onRedo = {},
+                onAddMemeDecor = {},
+                onSaveMeme = {}
+            )
+        }
     }
 }

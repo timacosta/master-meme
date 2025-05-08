@@ -2,6 +2,7 @@ package com.acostim.mastermeme.memeEditor.presentation
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.loadBitmapFromResources
+import com.acostim.mastermeme.ui.theme.OnDarkSurfaceContainer
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,13 +80,18 @@ fun MemeEditorRoute(
             bitmap = bitmap,
             modifier = Modifier.padding(innerPadding),
             memeDecors = state.memeDecors,
-            addMemeDecor = {
+            onAddMemeDecor = {
                 viewModel.onAction(
                     MemeEditorAction.AddMemeDecor(
                         memeDecor = MemeDecor(
                             offset = IntOffset(x = 0, y = 0)
                         )
                     )
+                )
+            },
+            onRemoveMemeDecor = { id ->
+                viewModel.onAction(
+                    MemeEditorAction.RemoveMemeDecor(id)
                 )
             },
             updateMemeDecorOffset = { id, newOffset ->
@@ -104,7 +111,8 @@ fun MemeEditorScreen(
     bitmap: Bitmap?,
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
-    addMemeDecor: () -> Unit,
+    onAddMemeDecor: () -> Unit,
+    onRemoveMemeDecor: (id: String) -> Unit,
     updateMemeDecorOffset: (String, IntOffset) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -118,11 +126,14 @@ fun MemeEditorScreen(
             ) {
                 focusManager.clearFocus()
             }
+            .background(OnDarkSurfaceContainer)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(8.dp)
         ) {
             bitmap?.let { bitmap ->
                 Box {
@@ -153,8 +164,8 @@ fun MemeEditorScreen(
                                     newOffset
                                 )
                             },
-                            onRemove = {
-
+                            onRemove = { id ->
+                                onRemoveMemeDecor(id)
                             }
                         )
                     }
@@ -166,7 +177,9 @@ fun MemeEditorScreen(
             modifier = Modifier.align(Alignment.BottomCenter),
             onUndo = {},
             onRedo = {},
-            onAddMemeDecor = {},
+            onAddMemeDecor = {
+                onAddMemeDecor()
+            },
             onSaveMeme = {}
         )
     }
