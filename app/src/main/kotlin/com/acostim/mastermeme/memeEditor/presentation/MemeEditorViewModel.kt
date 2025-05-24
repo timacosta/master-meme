@@ -29,6 +29,9 @@ class MemeEditorViewModel : ViewModel() {
             )
             is MemeEditorAction.OpenEditDialog -> openEditDialog(action.id)
             is MemeEditorAction.CloseEditDialog -> closeEditDialog()
+            is MemeEditorAction.UpdateText -> {
+
+            }
         }
     }
 

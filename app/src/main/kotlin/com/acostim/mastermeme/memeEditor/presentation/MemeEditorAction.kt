@@ -11,5 +11,7 @@ sealed interface MemeEditorAction {
 
     data object CloseEditDialog: MemeEditorAction
 
+    data class UpdateText(val text: String): MemeEditorAction
+
     data class UpdateMemeDecorOffset(val id: String, val newOffset: IntOffset) : MemeEditorAction
 }

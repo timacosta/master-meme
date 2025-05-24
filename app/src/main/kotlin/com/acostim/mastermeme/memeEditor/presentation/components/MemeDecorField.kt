@@ -52,36 +52,35 @@ fun MemeDecorField(
 
     Box(
         modifier = Modifier
+            .offset { memeDecor.offset }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+
+                        val newOffsetX = (accumulatedOffset.x + dragAmount.x)
+                            .coerceIn(0f, (parentWidth - textFieldSize.width).toFloat())
+                        val newOffsetY = (accumulatedOffset.y + dragAmount.y)
+                            .coerceIn(0f, (parentHeight - textFieldSize.height).toFloat())
+
+                        accumulatedOffset = IntOffset(newOffsetX.toInt(), newOffsetY.toInt())
+
+                        onDrag(
+                            IntOffset(
+                                newOffsetX.toInt(),
+                                newOffsetY.toInt()
+                            )
+                        )
+                    }
+                )
+            }
             .padding(iconSize / 2)
             .clickable {
                 onClick(memeDecor.id)
             }
     ) {
         Box(
-            Modifier
-                .offset { memeDecor.offset }
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDrag = { change, dragAmount ->
-                            change.consume()
-
-                            val newOffsetX = (accumulatedOffset.x + dragAmount.x)
-                                .coerceIn(0f, (parentWidth - textFieldSize.width).toFloat())
-                            val newOffsetY = (accumulatedOffset.y + dragAmount.y)
-                                .coerceIn(0f, (parentHeight - textFieldSize.height).toFloat())
-
-                            accumulatedOffset = IntOffset(newOffsetX.toInt(), newOffsetY.toInt())
-
-                            onDrag(
-                                IntOffset(
-                                    newOffsetX.toInt(),
-                                    newOffsetY.toInt()
-                                )
-                            )
-                        }
-                    )
-                }
-                .onSizeChanged { size ->
+            Modifier.onSizeChanged { size ->
                     textFieldSize = size
                 }
         ) {
