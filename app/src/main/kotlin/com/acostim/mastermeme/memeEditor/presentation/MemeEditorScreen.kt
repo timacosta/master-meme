@@ -8,9 +8,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -21,14 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.createBitmap
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeDecorField
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeEditorBottomBar
-import com.acostim.mastermeme.ui.loadBitmapFromResources
 import com.acostim.mastermeme.ui.theme.OnDarkSurfaceContainer
 
 @Composable
@@ -37,7 +37,7 @@ fun MemeEditorScreen(
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
     onAddMemeDecor: () -> Unit,
-    onClickMemeDecor: (id: String) -> Unit,
+    onUpdateMemeDecorText: (id: String) -> Unit,
     onRemoveMemeDecor: (id: String) -> Unit,
     updateMemeDecorOffset: (String, IntOffset) -> Unit,
 ) {
@@ -62,6 +62,8 @@ fun MemeEditorScreen(
                 .padding(8.dp)
         ) {
             bitmap?.let { bitmap ->
+                val imageRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
+
                 Box {
 
                     var imageWidth by remember { mutableIntStateOf(0) }
@@ -69,7 +71,8 @@ fun MemeEditorScreen(
 
                     Image(
                         modifier = Modifier
-                            .size(380.dp)
+                            .fillMaxWidth()
+                            .aspectRatio(imageRatio)
                             .onSizeChanged { size ->
                                 imageWidth = size.width
                                 imageHeight = size.height
@@ -85,7 +88,10 @@ fun MemeEditorScreen(
                             parentWidth = imageWidth,
                             parentHeight = imageHeight,
                             onClick = { id ->
-                                onClickMemeDecor(id)
+
+                            },
+                            onDoubleClick = { id ->
+                                onUpdateMemeDecorText(id)
                             },
                             onDrag = { newOffset ->
                                 updateMemeDecorOffset(
@@ -117,17 +123,16 @@ fun MemeEditorScreen(
 @Preview
 @Composable
 private fun MemeEditorScreenPreview() {
-    val bitmap = loadBitmapFromResources(
-        context = LocalContext.current,
-        assetPath = "ajtl_46.webp"
-    )
+    val bitmap = createBitmap(380, 380)
+    val canvas = android.graphics.Canvas(bitmap)
+    canvas.drawColor(android.graphics.Color.GRAY)
 
     MemeEditorScreen(
         bitmap = bitmap,
         memeDecors = emptyList(),
         onAddMemeDecor = {},
         onRemoveMemeDecor = {},
-        onClickMemeDecor = {},
+        onUpdateMemeDecorText = {},
         updateMemeDecorOffset = { _, _ ->
 
         },

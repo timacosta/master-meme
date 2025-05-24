@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
-import com.acostim.mastermeme.core.presentation.ObserveAsEvent
 import com.acostim.mastermeme.memeEditor.presentation.components.EditMemeDecorDialog
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import org.koin.androidx.compose.koinViewModel
@@ -80,7 +78,7 @@ fun MemeEditorRoute(
                     MemeEditorAction.RemoveMemeDecor(id)
                 )
             },
-            onClickMemeDecor = { id ->
+            onUpdateMemeDecorText = { id ->
                 viewModel.onAction(MemeEditorAction.OpenEditDialog(id))
             },
             updateMemeDecorOffset = { id, newOffset ->

@@ -2,7 +2,7 @@ package com.acostim.mastermeme.memeEditor.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -41,6 +41,7 @@ fun MemeDecorField(
     parentWidth: Int,
     parentHeight: Int,
     onClick: (id: String) -> Unit,
+    onDoubleClick: (id: String) -> Unit,
     onDrag: (IntOffset) -> Unit,
     onRemove: (id: String) -> Unit
 ) {
@@ -75,9 +76,14 @@ fun MemeDecorField(
                 )
             }
             .padding(iconSize / 2)
-            .clickable {
-                onClick(memeDecor.id)
-            }
+            .combinedClickable(
+                onClick = {
+                    onClick(memeDecor.id)
+                },
+                onDoubleClick = {
+                    onDoubleClick(memeDecor.id)
+                }
+            )
     ) {
         Box(
             Modifier.onSizeChanged { size ->
@@ -125,6 +131,9 @@ private fun EditableTextFieldPreview() {
         parentWidth = 100,
         parentHeight = 100,
         onClick = {
+
+        },
+        onDoubleClick = {
 
         },
         onDrag = {
