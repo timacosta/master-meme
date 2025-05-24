@@ -37,7 +37,7 @@ import com.acostim.mastermeme.ui.theme.OnDarkSurfaceContainer
 fun EditMemeDecorDialog(
     value: String,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: (String) -> Unit
 ) {
 
     var tempValue by remember { mutableStateOf(value) }
@@ -87,7 +87,7 @@ fun EditMemeDecorDialog(
 
                 TextButton(
                     onClick = {
-                        onConfirm()
+                        onConfirm(tempValue)
                     }
                 ) {
                     Text(text = stringResource(R.string.dialog_ok_btn))

@@ -2,14 +2,12 @@ package com.acostim.mastermeme.memeEditor.presentation
 
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.presentation.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class MemeEditorViewModel : ViewModel() {
 
@@ -30,7 +28,10 @@ class MemeEditorViewModel : ViewModel() {
             is MemeEditorAction.OpenEditDialog -> openEditDialog(action.id)
             is MemeEditorAction.CloseEditDialog -> closeEditDialog()
             is MemeEditorAction.UpdateText -> {
-
+                changeTextOnConfirmation(
+                    id = _state.value.editingMemeDecorId,
+                    value = action.text
+                )
             }
         }
     }
@@ -72,7 +73,7 @@ class MemeEditorViewModel : ViewModel() {
         return _state.value.memeDecors.first { it.id == id }.text
     }
 
-    fun onValueChange(id: String, value: String) {
+    private fun changeTextOnConfirmation(id: String?, value: String) {
         _state.update { currentState ->
             val updatedList = currentState.memeDecors.map { memeDecor ->
                 if (memeDecor.id == id) {
@@ -84,6 +85,8 @@ class MemeEditorViewModel : ViewModel() {
 
             currentState.copy(memeDecors = updatedList)
         }
+
+        closeEditDialog()
     }
 
     private fun updateMemeDecorOffset(

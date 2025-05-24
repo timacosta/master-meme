@@ -101,7 +101,7 @@ fun MemeEditorRoute(
                 viewModel.onAction(MemeEditorAction.CloseEditDialog)
             },
             onConfirm = {
-                //viewModel.onAction(MemeEditorAction.UpdateText(it))
+                viewModel.onAction(MemeEditorAction.UpdateText(it))
             }
         )
     }
