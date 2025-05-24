@@ -7,5 +7,9 @@ sealed interface MemeEditorAction {
 
     data class RemoveMemeDecor(val id: String) : MemeEditorAction
 
-    data class UpdateMemeDecor(val memeDecorId: String, val newOffset: IntOffset) : MemeEditorAction
+    data class OpenEditDialog(val id: String): MemeEditorAction
+
+    data object CloseEditDialog: MemeEditorAction
+
+    data class UpdateMemeDecorOffset(val id: String, val newOffset: IntOffset) : MemeEditorAction
 }

@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.memeEditor.presentation
+package com.acostim.mastermeme.memeEditor.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -24,14 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 import com.acostim.mastermeme.ui.theme.OnPrimaryFixed
 import com.acostim.mastermeme.ui.theme.PrimaryContainer
-import com.acostim.mastermeme.ui.theme.Surface
 import com.acostim.mastermeme.ui.theme.SurfaceContainer
 
 @Composable

@@ -1,7 +1,8 @@
-package com.acostim.mastermeme.memeEditor.presentation
+package com.acostim.mastermeme.memeEditor.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -32,12 +33,14 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.core.presentation.UiText
+import com.acostim.mastermeme.memeEditor.presentation.MemeDecor
 
 @Composable
-fun EditableTextField(
+fun MemeDecorField(
     memeDecor: MemeDecor,
     parentWidth: Int,
     parentHeight: Int,
+    onClick: (id: String) -> Unit,
     onDrag: (IntOffset) -> Unit,
     onRemove: (id: String) -> Unit
 ) {
@@ -48,7 +51,11 @@ fun EditableTextField(
     var accumulatedOffset by remember { mutableStateOf(memeDecor.offset) }
 
     Box(
-        modifier = Modifier.padding(iconSize / 2)
+        modifier = Modifier
+            .padding(iconSize / 2)
+            .clickable {
+                onClick(memeDecor.id)
+            }
     ) {
         Box(
             Modifier
@@ -114,10 +121,13 @@ fun EditableTextField(
 @Preview
 @Composable
 private fun EditableTextFieldPreview() {
-    EditableTextField(
+    MemeDecorField(
         memeDecor = MemeDecor(text = UiText.DynamicString("Write something")),
         parentWidth = 100,
         parentHeight = 100,
+        onClick = {
+
+        },
         onDrag = {
 
         },

@@ -8,7 +8,9 @@ import com.acostim.mastermeme.ui.theme.Impact
 import java.util.UUID
 
 data class CreateMemeState(
-    val memeDecors: List<MemeDecor> = emptyList()
+    val memeDecors: List<MemeDecor> = emptyList(),
+    val editingMemeDecorId: String? = null,
+    val showEditDialog: Boolean = false
 )
 
 data class MemeDecor(
