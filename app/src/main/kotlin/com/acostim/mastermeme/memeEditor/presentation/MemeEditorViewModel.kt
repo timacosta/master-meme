@@ -25,17 +25,16 @@ class MemeEditorViewModel : ViewModel() {
                 selectedMemeDecor = action.memeDecor,
                 newOffset = action.newOffset
             )
-            is MemeEditorAction.SelectMemeDecor -> {
-                onMemeDecorClick(action.memeDecor)
-            }
+
+            is MemeEditorAction.OnFocusCleared -> onMemeDecorFocusCleared()
+            is MemeEditorAction.OpenStylingOptions -> onMemeDecorClick(action.memeDecor)
             is MemeEditorAction.OpenEditDialog -> openTextEditDialog(action.memeDecor)
             is MemeEditorAction.CloseEditDialog -> closeEditDialog()
-            is MemeEditorAction.UpdateText -> {
-                changeTextOnConfirmation(
-                    id = _state.value.selectedMemeDecor?.id,
-                    value = action.text
-                )
-            }
+            is MemeEditorAction.UpdateText -> changeTextOnConfirmation(
+                id = _state.value.selectedMemeDecor?.id,
+                value = action.text
+            )
+
         }
     }
 
@@ -55,8 +54,18 @@ class MemeEditorViewModel : ViewModel() {
         _state.update { currentState ->
             currentState.copy(
                 selectedMemeDecor = memeDecor,
-                showStylingOptions = true,
-                showSavingOptions = false
+                isStylingOptionsVisible = true,
+                isSavingOptionsVisible = false
+            )
+        }
+    }
+
+    private fun onMemeDecorFocusCleared() {
+        _state.update { currentState ->
+            currentState.copy(
+                isSavingOptionsVisible = true,
+                isStylingOptionsVisible = false,
+                selectedMemeDecor = null
             )
         }
     }

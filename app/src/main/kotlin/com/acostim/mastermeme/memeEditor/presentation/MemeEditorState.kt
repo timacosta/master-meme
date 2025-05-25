@@ -11,8 +11,8 @@ import java.util.UUID
 data class CreateMemeState(
     val memeDecors: List<MemeDecor> = emptyList(),
     val selectedMemeDecor: MemeDecor? = null,
-    val showStylingOptions: Boolean = false,
-    val showSavingOptions: Boolean = true,
+    val isStylingOptionsVisible: Boolean = false,
+    val isSavingOptionsVisible: Boolean = true,
     val showEditDialog: Boolean = false
 )
 

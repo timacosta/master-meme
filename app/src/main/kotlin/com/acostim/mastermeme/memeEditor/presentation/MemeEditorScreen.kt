@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,7 +29,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeDecorField
-import com.acostim.mastermeme.memeEditor.presentation.components.MemeEditorBottomBar
+import com.acostim.mastermeme.memeEditor.presentation.components.MemeSaveOptionsBar
+import com.acostim.mastermeme.memeEditor.presentation.components.MemeStyleEditBar
+import com.acostim.mastermeme.ui.theme.MastermemeTheme
 import com.acostim.mastermeme.ui.theme.OnDarkSurfaceContainer
 
 @Composable
@@ -36,7 +39,12 @@ fun MemeEditorScreen(
     bitmap: Bitmap?,
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
+    selectedMemeDecor: MemeDecor?,
+    isSaveOptionsBarVisible: Boolean,
+    isStyleOptionsBarVisible: Boolean,
     onAddMemeDecor: () -> Unit,
+    onFocusCleared: () -> Unit,
+    onOpenStylingOptions: (MemeDecor) -> Unit,
     onUpdateMemeDecorText: (MemeDecor) -> Unit,
     onRemoveMemeDecor: (MemeDecor) -> Unit,
     updateMemeDecorOffset: (MemeDecor, IntOffset) -> Unit,
@@ -51,6 +59,10 @@ fun MemeEditorScreen(
                 interactionSource = remember { MutableInteractionSource() }
             ) {
                 focusManager.clearFocus()
+                focusManager.clearFocus()
+                if (selectedMemeDecor != null) {
+                    onFocusCleared()
+                }
             }
             .background(OnDarkSurfaceContainer)
     ) {
@@ -87,8 +99,11 @@ fun MemeEditorScreen(
                             memeDecor = memeDecor,
                             parentWidth = imageWidth,
                             parentHeight = imageHeight,
+                            onFocusCleared = {
+                                onFocusCleared()
+                            },
                             onClick = { memeDecor ->
-
+                                onOpenStylingOptions(memeDecor)
                             },
                             onDoubleClick = { memeDecor ->
                                 onUpdateMemeDecorText(memeDecor)
@@ -108,15 +123,23 @@ fun MemeEditorScreen(
             }
         }
 
-        MemeEditorBottomBar(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onUndo = {},
-            onRedo = {},
-            onAddMemeDecor = {
-                onAddMemeDecor()
-            },
-            onSaveMeme = {}
-        )
+        if (isSaveOptionsBarVisible) {
+            MemeSaveOptionsBar(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                onUndo = {},
+                onRedo = {},
+                onAddMemeDecor = {
+                    onAddMemeDecor()
+                },
+                onSaveMeme = {}
+            )
+        }
+
+        if (isStyleOptionsBarVisible) {
+            MemeStyleEditBar(
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
     }
 }
 
@@ -127,14 +150,23 @@ private fun MemeEditorScreenPreview() {
     val canvas = android.graphics.Canvas(bitmap)
     canvas.drawColor(android.graphics.Color.GRAY)
 
-    MemeEditorScreen(
-        bitmap = bitmap,
-        memeDecors = emptyList(),
-        onAddMemeDecor = {},
-        onRemoveMemeDecor = {},
-        onUpdateMemeDecorText = {},
-        updateMemeDecorOffset = { _, _ ->
+    MastermemeTheme {
+        Surface {
+            MemeEditorScreen(
+                bitmap = bitmap,
+                memeDecors = emptyList(),
+                selectedMemeDecor = null,
+                isStyleOptionsBarVisible = true,
+                isSaveOptionsBarVisible = false,
+                onAddMemeDecor = {},
+                onRemoveMemeDecor = {},
+                onFocusCleared = {},
+                onOpenStylingOptions = {},
+                onUpdateMemeDecorText = {},
+                updateMemeDecorOffset = { _, _ ->
 
-        },
-    )
+                },
+            )
+        }
+    }
 }

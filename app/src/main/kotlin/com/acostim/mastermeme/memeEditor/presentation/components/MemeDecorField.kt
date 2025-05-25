@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -40,6 +41,7 @@ fun MemeDecorField(
     memeDecor: MemeDecor,
     parentWidth: Int,
     parentHeight: Int,
+    onFocusCleared: () -> Unit,
     onClick: (MemeDecor) -> Unit,
     onDoubleClick: (MemeDecor) -> Unit,
     onDrag: (IntOffset) -> Unit,
@@ -84,6 +86,11 @@ fun MemeDecorField(
                     onDoubleClick(memeDecor)
                 }
             )
+            .onFocusChanged { focusState ->
+                if (!focusState.isFocused) {
+                    onFocusCleared()
+                }
+            }
     ) {
         Box(
             Modifier.onSizeChanged { size ->
@@ -130,6 +137,9 @@ private fun EditableTextFieldPreview() {
         memeDecor = MemeDecor(text = UiText.DynamicString("Write something")),
         parentWidth = 100,
         parentHeight = 100,
+        onFocusCleared = {
+
+        },
         onClick = {
 
         },

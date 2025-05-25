@@ -64,6 +64,9 @@ fun MemeEditorRoute(
             bitmap = bitmap,
             modifier = Modifier.padding(innerPadding),
             memeDecors = state.memeDecors,
+            selectedMemeDecor = state.selectedMemeDecor,
+            isSaveOptionsBarVisible = state.isSavingOptionsVisible,
+            isStyleOptionsBarVisible = state.isStylingOptionsVisible,
             onAddMemeDecor = {
                 viewModel.onAction(
                     MemeEditorAction.AddMemeDecor(
@@ -73,13 +76,21 @@ fun MemeEditorRoute(
                     )
                 )
             },
+            onFocusCleared = {
+                viewModel.onAction(MemeEditorAction.OnFocusCleared)
+            },
             onRemoveMemeDecor = { memeDecor ->
                 viewModel.onAction(
                     MemeEditorAction.RemoveMemeDecor(memeDecor)
                 )
             },
-            onUpdateMemeDecorText = { id ->
-                viewModel.onAction(MemeEditorAction.OpenEditDialog(id))
+            onOpenStylingOptions = { memeDecor ->
+                viewModel.onAction(
+                    MemeEditorAction.OpenStylingOptions(memeDecor)
+                )
+            },
+            onUpdateMemeDecorText = { memeDecor ->
+                viewModel.onAction(MemeEditorAction.OpenEditDialog(memeDecor))
             },
             updateMemeDecorOffset = { memeDecor, newOffset ->
                 viewModel.onAction(

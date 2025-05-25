@@ -33,7 +33,7 @@ import com.acostim.mastermeme.ui.theme.PrimaryContainer
 import com.acostim.mastermeme.ui.theme.SurfaceContainer
 
 @Composable
-fun MemeEditorBottomBar(
+fun MemeSaveOptionsBar(
     modifier: Modifier = Modifier,
     onUndo: () -> Unit,
     onRedo: () -> Unit,
@@ -110,7 +110,7 @@ private fun SaveButton(onClick: () -> Unit) {
 private fun MemeEditorBottomBarPreview() {
     MastermemeTheme {
         Surface {
-            MemeEditorBottomBar(
+            MemeSaveOptionsBar(
                 onUndo = {},
                 onRedo = {},
                 onAddMemeDecor = {},
