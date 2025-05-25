@@ -20,16 +20,19 @@ class MemeEditorViewModel : ViewModel() {
     fun onAction(action: MemeEditorAction) {
         when (action) {
             is MemeEditorAction.AddMemeDecor -> addMemeDecor(memeDecor = action.memeDecor)
-            is MemeEditorAction.RemoveMemeDecor -> removeMemeDecor(id = action.id)
+            is MemeEditorAction.RemoveMemeDecor -> removeMemeDecor(memeDecor = action.memeDecor)
             is MemeEditorAction.UpdateMemeDecorOffset -> updateMemeDecorOffset(
-                id = action.id,
+                selectedMemeDecor = action.memeDecor,
                 newOffset = action.newOffset
             )
-            is MemeEditorAction.OpenEditDialog -> openEditDialog(action.id)
+            is MemeEditorAction.SelectMemeDecor -> {
+                onMemeDecorClick(action.memeDecor)
+            }
+            is MemeEditorAction.OpenEditDialog -> openTextEditDialog(action.memeDecor)
             is MemeEditorAction.CloseEditDialog -> closeEditDialog()
             is MemeEditorAction.UpdateText -> {
                 changeTextOnConfirmation(
-                    id = _state.value.editingMemeDecorId,
+                    id = _state.value.selectedMemeDecor?.id,
                     value = action.text
                 )
             }
@@ -42,18 +45,28 @@ class MemeEditorViewModel : ViewModel() {
         }
     }
 
-    private fun removeMemeDecor(id: String) {
+    private fun removeMemeDecor(memeDecor: MemeDecor) {
         _state.update { currentState ->
-            currentState.copy(memeDecors = currentState.memeDecors.filter { it.id != id })
+            currentState.copy(memeDecors = currentState.memeDecors.filter { it.id != memeDecor.id })
         }
     }
 
-    private fun openEditDialog(id: String) {
-        val decorToEdit = _state.value.memeDecors.firstOrNull { it.id == id }
+    private fun onMemeDecorClick(memeDecor: MemeDecor) {
+        _state.update { currentState ->
+            currentState.copy(
+                selectedMemeDecor = memeDecor,
+                showStylingOptions = true,
+                showSavingOptions = false
+            )
+        }
+    }
+
+    private fun openTextEditDialog(memeDecor: MemeDecor) {
+        val decorToEdit = _state.value.memeDecors.firstOrNull { it.id == memeDecor.id }
         if (decorToEdit != null) {
             _state.update {
                 it.copy(
-                    editingMemeDecorId = id,
+                    selectedMemeDecor = decorToEdit,
                     showEditDialog = true
                 )
             }
@@ -63,14 +76,14 @@ class MemeEditorViewModel : ViewModel() {
     private fun closeEditDialog() {
         _state.update {
             it.copy(
-                editingMemeDecorId = null,
+                selectedMemeDecor = null,
                 showEditDialog = false
             )
         }
     }
 
-    fun getCurrentMemeDecorText(id: String?): UiText {
-        return _state.value.memeDecors.first { it.id == id }.text
+    fun getCurrentMemeDecorText(memeDecor: MemeDecor?): UiText {
+        return _state.value.memeDecors.first { it.id == memeDecor?.id }.text
     }
 
     private fun changeTextOnConfirmation(id: String?, value: String) {
@@ -90,12 +103,12 @@ class MemeEditorViewModel : ViewModel() {
     }
 
     private fun updateMemeDecorOffset(
-        id: String,
+        selectedMemeDecor: MemeDecor,
         newOffset: IntOffset,
     ) {
         _state.update { currentState ->
             val updatedList = currentState.memeDecors.map { memeDecor ->
-                if (memeDecor.id == id) {
+                if (memeDecor.id == selectedMemeDecor.id) {
                     memeDecor.copy(offset = newOffset)
                 } else {
                     memeDecor

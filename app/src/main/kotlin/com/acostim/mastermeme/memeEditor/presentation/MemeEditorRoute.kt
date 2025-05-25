@@ -73,18 +73,18 @@ fun MemeEditorRoute(
                     )
                 )
             },
-            onRemoveMemeDecor = { id ->
+            onRemoveMemeDecor = { memeDecor ->
                 viewModel.onAction(
-                    MemeEditorAction.RemoveMemeDecor(id)
+                    MemeEditorAction.RemoveMemeDecor(memeDecor)
                 )
             },
             onUpdateMemeDecorText = { id ->
                 viewModel.onAction(MemeEditorAction.OpenEditDialog(id))
             },
-            updateMemeDecorOffset = { id, newOffset ->
+            updateMemeDecorOffset = { memeDecor, newOffset ->
                 viewModel.onAction(
                     MemeEditorAction.UpdateMemeDecorOffset(
-                        id = id,
+                        memeDecor = memeDecor,
                         newOffset = newOffset
                     )
                 )
@@ -94,7 +94,7 @@ fun MemeEditorRoute(
 
     if (state.showEditDialog) {
         EditMemeDecorDialog(
-            value = viewModel.getCurrentMemeDecorText(state.editingMemeDecorId).asString(),
+            value = viewModel.getCurrentMemeDecorText(state.selectedMemeDecor).asString(),
             onDismiss = {
                 viewModel.onAction(MemeEditorAction.CloseEditDialog)
             },

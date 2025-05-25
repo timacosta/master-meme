@@ -40,10 +40,10 @@ fun MemeDecorField(
     memeDecor: MemeDecor,
     parentWidth: Int,
     parentHeight: Int,
-    onClick: (id: String) -> Unit,
-    onDoubleClick: (id: String) -> Unit,
+    onClick: (MemeDecor) -> Unit,
+    onDoubleClick: (MemeDecor) -> Unit,
     onDrag: (IntOffset) -> Unit,
-    onRemove: (id: String) -> Unit
+    onRemove: (MemeDecor) -> Unit
 ) {
     val iconSize = 20.dp
     val offsetInPx = LocalDensity.current.run { (iconSize / 2).roundToPx() }
@@ -78,10 +78,10 @@ fun MemeDecorField(
             .padding(iconSize / 2)
             .combinedClickable(
                 onClick = {
-                    onClick(memeDecor.id)
+                    onClick(memeDecor)
                 },
                 onDoubleClick = {
-                    onDoubleClick(memeDecor.id)
+                    onDoubleClick(memeDecor)
                 }
             )
     ) {
@@ -109,7 +109,7 @@ fun MemeDecorField(
                     .background(Color.Red)
                     .align(Alignment.TopEnd),
                 onClick = {
-                    onRemove(memeDecor.id)
+                    onRemove(memeDecor)
                 }
             ) {
                 Icon(

@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.IntOffset
 import com.acostim.mastermeme.R
@@ -9,7 +10,9 @@ import java.util.UUID
 
 data class CreateMemeState(
     val memeDecors: List<MemeDecor> = emptyList(),
-    val editingMemeDecorId: String? = null,
+    val selectedMemeDecor: MemeDecor? = null,
+    val showStylingOptions: Boolean = false,
+    val showSavingOptions: Boolean = true,
     val showEditDialog: Boolean = false
 )
 
@@ -17,5 +20,7 @@ data class MemeDecor(
     val id: String = UUID.randomUUID().toString(),
     val text: UiText = UiText.StringResource(R.string.tap_twice_to_edit),
     val offset: IntOffset = IntOffset(0, 0),
-    val fontFamily: FontFamily = Impact
+    val fontFamily: FontFamily = Impact,
+    val fontSize: Int = 40,
+    val fontColor: Color = Color.White
 )

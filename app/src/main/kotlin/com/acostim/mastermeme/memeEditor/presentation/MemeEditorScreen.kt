@@ -37,9 +37,9 @@ fun MemeEditorScreen(
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
     onAddMemeDecor: () -> Unit,
-    onUpdateMemeDecorText: (id: String) -> Unit,
-    onRemoveMemeDecor: (id: String) -> Unit,
-    updateMemeDecorOffset: (String, IntOffset) -> Unit,
+    onUpdateMemeDecorText: (MemeDecor) -> Unit,
+    onRemoveMemeDecor: (MemeDecor) -> Unit,
+    updateMemeDecorOffset: (MemeDecor, IntOffset) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -87,15 +87,15 @@ fun MemeEditorScreen(
                             memeDecor = memeDecor,
                             parentWidth = imageWidth,
                             parentHeight = imageHeight,
-                            onClick = { id ->
+                            onClick = { memeDecor ->
 
                             },
-                            onDoubleClick = { id ->
-                                onUpdateMemeDecorText(id)
+                            onDoubleClick = { memeDecor ->
+                                onUpdateMemeDecorText(memeDecor)
                             },
                             onDrag = { newOffset ->
                                 updateMemeDecorOffset(
-                                    memeDecor.id,
+                                    memeDecor,
                                     newOffset
                                 )
                             },
