@@ -99,6 +99,11 @@ fun MemeEditorRoute(
                         newOffset = newOffset
                     )
                 )
+            },
+            onFontSelection = { memeFont ->
+                viewModel.onAction(
+                    MemeEditorAction.UpdateMemeDecorFont(memeFont)
+                )
             }
         )
     }

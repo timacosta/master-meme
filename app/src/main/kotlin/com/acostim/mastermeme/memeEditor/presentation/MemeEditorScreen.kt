@@ -48,6 +48,7 @@ fun MemeEditorScreen(
     onUpdateMemeDecorText: (MemeDecor) -> Unit,
     onRemoveMemeDecor: (MemeDecor) -> Unit,
     updateMemeDecorOffset: (MemeDecor, IntOffset) -> Unit,
+    onFontSelection: (MemeFont) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -59,7 +60,6 @@ fun MemeEditorScreen(
                 interactionSource = remember { MutableInteractionSource() }
             ) {
                 focusManager.clearFocus()
-                focusManager.clearFocus()
                 if (selectedMemeDecor != null) {
                     onFocusCleared()
                 }
@@ -70,7 +70,6 @@ fun MemeEditorScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .align(Alignment.Center)
                 .padding(8.dp)
         ) {
             bitmap?.let { bitmap ->
@@ -138,6 +137,9 @@ fun MemeEditorScreen(
         if (isStyleOptionsBarVisible) {
             MemeStyleEditBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
+                onFontSelection = { memeFont ->
+                    onFontSelection(memeFont)
+                }
             )
         }
     }
@@ -166,6 +168,9 @@ private fun MemeEditorScreenPreview() {
                 updateMemeDecorOffset = { _, _ ->
 
                 },
+                onFontSelection = {
+
+                }
             )
         }
     }

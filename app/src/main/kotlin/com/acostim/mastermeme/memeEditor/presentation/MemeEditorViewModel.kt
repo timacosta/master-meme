@@ -35,6 +35,8 @@ class MemeEditorViewModel : ViewModel() {
                 value = action.text
             )
 
+            is MemeEditorAction.UpdateMemeDecorFont -> onMemeFontUpdate(action.font)
+
         }
     }
 
@@ -57,6 +59,22 @@ class MemeEditorViewModel : ViewModel() {
                 isStylingOptionsVisible = true,
                 isSavingOptionsVisible = false
             )
+        }
+    }
+
+    private fun onMemeFontUpdate(font: MemeFont) {
+        _state.update { currentState ->
+            val decorToEdit = currentState.selectedMemeDecor
+            val updatedList = currentState.memeDecors.map {
+                if (decorToEdit != null && it.id == decorToEdit.id) {
+                    it.copy(
+                        fontFamily = font.fontFamily
+                    )
+                } else {
+                    it
+                }
+            }
+            currentState.copy(memeDecors = updatedList)
         }
     }
 
@@ -85,7 +103,6 @@ class MemeEditorViewModel : ViewModel() {
     private fun closeEditDialog() {
         _state.update {
             it.copy(
-                selectedMemeDecor = null,
                 showEditDialog = false
             )
         }

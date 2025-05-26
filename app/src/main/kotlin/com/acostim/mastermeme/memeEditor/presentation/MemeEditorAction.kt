@@ -19,4 +19,6 @@ sealed interface MemeEditorAction {
 
     data class UpdateMemeDecorOffset(val memeDecor: MemeDecor, val newOffset: IntOffset) :
         MemeEditorAction
+
+    data class UpdateMemeDecorFont(val font: MemeFont): MemeEditorAction
 }
