@@ -1,8 +1,14 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import com.acostim.mastermeme.core.presentation.UiText
+import com.acostim.mastermeme.memeEditor.presentation.state.CreateMemeState
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorEvent
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,6 +42,8 @@ class MemeEditorViewModel : ViewModel() {
             )
 
             is MemeEditorAction.UpdateMemeDecorFont -> onMemeFontUpdate(action.font)
+
+            is MemeEditorAction.UpdateMemeDecorColor -> onMemeColorUpdate(action.color)
 
         }
     }
@@ -74,6 +82,24 @@ class MemeEditorViewModel : ViewModel() {
                     it
                 }
             }
+            currentState.copy(memeDecors = updatedList)
+        }
+    }
+
+    private fun onMemeColorUpdate(color: Color) {
+        _state.update { currentState ->
+            val decorToEdit = currentState.selectedMemeDecor
+
+            val updatedList = currentState.memeDecors.map {
+                if (decorToEdit != null && it.id == decorToEdit.id) {
+                    it.copy(
+                        fontColor = color
+                    )
+                } else {
+                    it
+                }
+            }
+
             currentState.copy(memeDecors = updatedList)
         }
     }

@@ -1,5 +1,7 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
+import com.acostim.mastermeme.memeEditor.presentation.state.CreateMemeState
+
 class MemeEditorStateManagerImpl(
     private val maxHistorySize: Int = 5
 ) {

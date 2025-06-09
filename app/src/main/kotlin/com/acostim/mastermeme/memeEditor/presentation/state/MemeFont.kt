@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.memeEditor.presentation
+package com.acostim.mastermeme.memeEditor.presentation.state
 
 import androidx.compose.ui.text.font.FontFamily
 import com.acostim.mastermeme.ui.theme.Impact

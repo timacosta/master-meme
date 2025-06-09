@@ -23,8 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -36,7 +34,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.acostim.mastermeme.core.presentation.UiText
-import com.acostim.mastermeme.memeEditor.presentation.MemeDecor
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 
 @Composable
 fun MemeDecorField(
@@ -107,7 +105,7 @@ fun MemeDecorField(
                 text = memeDecor.text.asString(),
                 style = TextStyle(
                     fontFamily = memeDecor.fontFamily,
-                    color = Color.White,
+                    color = memeDecor.fontColor,
                     fontSize = memeDecor.fontSize.sp
                 )
             )

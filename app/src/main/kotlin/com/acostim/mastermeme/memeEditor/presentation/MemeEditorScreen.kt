@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -31,6 +32,8 @@ import androidx.core.graphics.createBitmap
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeDecorField
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeSaveOptionsBar
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeStyleEditBar
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 import com.acostim.mastermeme.ui.theme.OnDarkSurfaceContainer
 
@@ -49,6 +52,7 @@ fun MemeEditorScreen(
     onRemoveMemeDecor: (MemeDecor) -> Unit,
     updateMemeDecorOffset: (MemeDecor, IntOffset) -> Unit,
     onFontSelection: (MemeFont) -> Unit,
+    onColorSelection: (Color) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -137,6 +141,9 @@ fun MemeEditorScreen(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onFontSelection = { memeFont ->
                     onFontSelection(memeFont)
+                },
+                onColorSelection = { color ->
+                    onColorSelection(color)
                 }
             )
         }
@@ -167,6 +174,9 @@ private fun MemeEditorScreenPreview() {
 
                 },
                 onFontSelection = {
+
+                },
+                onColorSelection = {
 
                 }
             )

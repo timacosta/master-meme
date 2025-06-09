@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.memeEditor.presentation.components.EditMemeDecorDialog
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
 import com.acostim.mastermeme.ui.loadBitmapFromResources
 import org.koin.androidx.compose.koinViewModel
 
@@ -103,6 +105,11 @@ fun MemeEditorRoute(
             onFontSelection = { memeFont ->
                 viewModel.onAction(
                     MemeEditorAction.UpdateMemeDecorFont(memeFont)
+                )
+            },
+            onColorSelection = { color ->
+                viewModel.onAction(
+                    MemeEditorAction.UpdateMemeDecorColor(color)
                 )
             }
         )

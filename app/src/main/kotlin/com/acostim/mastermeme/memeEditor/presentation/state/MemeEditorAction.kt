@@ -1,5 +1,6 @@
-package com.acostim.mastermeme.memeEditor.presentation
+package com.acostim.mastermeme.memeEditor.presentation.state
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 
 sealed interface MemeEditorAction {
@@ -21,4 +22,6 @@ sealed interface MemeEditorAction {
         MemeEditorAction
 
     data class UpdateMemeDecorFont(val font: MemeFont): MemeEditorAction
+
+    data class UpdateMemeDecorColor(val color: Color) : MemeEditorAction
 }
