@@ -9,6 +9,7 @@ import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorEvent
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
+import com.acostim.mastermeme.memeEditor.presentation.state.fonts
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +45,8 @@ class MemeEditorViewModel : ViewModel() {
             is MemeEditorAction.UpdateMemeDecorFont -> onMemeFontUpdate(action.font)
 
             is MemeEditorAction.UpdateMemeDecorColor -> onMemeColorUpdate(action.color)
+
+            is MemeEditorAction.UpdateMemeDecorSize -> onMemeDecorSizeUpdate(action.size)
 
         }
     }
@@ -94,6 +97,24 @@ class MemeEditorViewModel : ViewModel() {
                 if (decorToEdit != null && it.id == decorToEdit.id) {
                     it.copy(
                         fontColor = color
+                    )
+                } else {
+                    it
+                }
+            }
+
+            currentState.copy(memeDecors = updatedList)
+        }
+    }
+
+    private fun onMemeDecorSizeUpdate(fontSize: Float) {
+        _state.update { currentState ->
+            val decorToEdit = currentState.selectedMemeDecor
+
+            val updatedList = currentState.memeDecors.map {
+                if (decorToEdit != null && it.id == decorToEdit.id) {
+                    it.copy(
+                        fontSize = fontSize
                     )
                 } else {
                     it

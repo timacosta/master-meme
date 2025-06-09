@@ -19,11 +19,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +48,10 @@ import com.acostim.mastermeme.ui.theme.SurfaceContainer
 @Composable
 fun MemeStyleEditBar(
     modifier: Modifier = Modifier,
+    initialFontSizeValue: Float,
     onFontSelection: (MemeFont) -> Unit,
-    onColorSelection: (Color) -> Unit
+    onColorSelection: (Color) -> Unit,
+    onSizeSelection: (Float) -> Unit
 ) {
 
     var isTextStyleOptionsVisible by remember { mutableStateOf(true) }
@@ -56,7 +62,7 @@ fun MemeStyleEditBar(
         modifier = modifier.background(SurfaceContainer)
     ) {
         if (isTextStyleOptionsVisible) {
-            ChangeTextStyleOptions(
+            ChangeFontStyleOptions(
                 fonts = fonts,
                 onFontSelection = { memeFont ->
                     onFontSelection(memeFont)
@@ -65,7 +71,12 @@ fun MemeStyleEditBar(
         }
 
         if (isTextSizeOptionsVisible) {
-
+            ChangeSizeStyleOptions(
+                initialValue = initialFontSizeValue,
+                onSizeStyleSelection = {
+                    onSizeSelection(it)
+                }
+            )
         }
 
         if (isTextColorOptionsVisible) {
@@ -151,7 +162,7 @@ private fun AcceptButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ChangeTextStyleOptions(
+private fun ChangeFontStyleOptions(
     fonts: List<MemeFont>,
     onFontSelection: (MemeFont) -> Unit,
 ) {
@@ -173,6 +184,53 @@ private fun ChangeTextStyleOptions(
                 fontFamily = it.fontFamily,
                 fontSize = 12.sp
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChangeSizeStyleOptions(
+    initialValue: Float,
+    onSizeStyleSelection: (Float) -> Unit
+) {
+    val state = remember {
+        SliderState(
+            value = initialValue,
+            valueRange = 12f..48f
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Aa"
+            )
+
+            Slider(
+                state = state,
+                modifier = Modifier.weight(1f)
+            )
+
+            Text(text = "Aa")
+        }
+
+        LaunchedEffect(state.value) {
+            onSizeStyleSelection(state.value)
         }
     }
 }
@@ -225,13 +283,56 @@ private fun MemeStyleEditBarPreview() {
     MastermemeTheme {
         Surface {
             MemeStyleEditBar(
+                initialFontSizeValue = 40f,
                 onFontSelection = {
 
                 },
                 onColorSelection = {
 
+                },
+                onSizeSelection = {
+
                 }
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ChangeFontStyleOptionsPreview() {
+    MastermemeTheme {
+        Surface {
+            ChangeFontStyleOptions(
+                fonts = fonts
+            ) { }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ChangeSizeStyleOptionsPreview() {
+    MastermemeTheme {
+        Surface {
+            ChangeSizeStyleOptions(
+                initialValue = 40f,
+                onSizeStyleSelection = {
+
+                }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ChangeColorStyleOptionsPreview() {
+    MastermemeTheme {
+        Surface {
+            ChangeColorStyleOptions(
+                colors = colors
+            ) { }
         }
     }
 }

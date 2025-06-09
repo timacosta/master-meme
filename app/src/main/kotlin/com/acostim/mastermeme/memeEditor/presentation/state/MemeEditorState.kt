@@ -21,6 +21,6 @@ data class MemeDecor(
     val text: UiText = UiText.StringResource(R.string.tap_twice_to_edit),
     val offset: IntOffset = IntOffset(0, 0),
     val fontFamily: FontFamily = Impact,
-    val fontSize: Int = 40,
+    val fontSize: Float = 40f,
     val fontColor: Color = Color.White
 )

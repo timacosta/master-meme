@@ -111,6 +111,11 @@ fun MemeEditorRoute(
                 viewModel.onAction(
                     MemeEditorAction.UpdateMemeDecorColor(color)
                 )
+            },
+            onSizeSelection = { size ->
+                viewModel.onAction(
+                    MemeEditorAction.UpdateMemeDecorSize(size)
+                )
             }
         )
     }
