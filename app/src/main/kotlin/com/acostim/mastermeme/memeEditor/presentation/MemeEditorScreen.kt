@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -70,13 +71,13 @@ fun MemeEditorScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(8.dp)
+                .fillMaxSize()
+                .padding(bottom = if (isSaveOptionsBarVisible || isStyleOptionsBarVisible) 80.dp else 0.dp)
         ) {
             bitmap?.let { bitmap ->
                 val imageRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
 
                 Box {
-
                     var imageWidth by remember { mutableIntStateOf(0) }
                     var imageHeight by remember { mutableIntStateOf(0) }
 
