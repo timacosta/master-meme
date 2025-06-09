@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -99,9 +98,7 @@ fun MemeEditorScreen(
                             memeDecor = memeDecor,
                             parentWidth = imageWidth,
                             parentHeight = imageHeight,
-                            onFocusCleared = {
-                                onFocusCleared()
-                            },
+                            isSelected = selectedMemeDecor?.id == memeDecor.id,
                             onClick = { memeDecor ->
                                 onOpenStylingOptions(memeDecor)
                             },

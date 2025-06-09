@@ -3,7 +3,6 @@ package com.acostim.mastermeme.memeEditor.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -35,7 +33,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.acostim.mastermeme.core.presentation.UiText
@@ -46,7 +43,7 @@ fun MemeDecorField(
     memeDecor: MemeDecor,
     parentWidth: Int,
     parentHeight: Int,
-    onFocusCleared: () -> Unit,
+    isSelected: Boolean,
     onClick: (MemeDecor) -> Unit,
     onDoubleClick: (MemeDecor) -> Unit,
     onDrag: (IntOffset) -> Unit,
@@ -57,9 +54,6 @@ fun MemeDecorField(
 
     var textFieldSize by remember { mutableStateOf(IntSize.Zero) }
     var accumulatedOffset by remember { mutableStateOf(memeDecor.offset) }
-
-    val focusRequester = remember { FocusRequester() }
-    var isFocused by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -86,22 +80,14 @@ fun MemeDecorField(
                 )
             }
             .padding(iconSize / 2)
-            .focusRequester(focusRequester)
             .combinedClickable(
                 onClick = {
-                    focusRequester.requestFocus()
                     onClick(memeDecor)
                 },
                 onDoubleClick = {
                     onDoubleClick(memeDecor)
                 }
             )
-            .onFocusChanged {
-                isFocused = it.isFocused
-                if (!it.isFocused) {
-                    onFocusCleared()
-                }
-            }
     ) {
         Box(
             Modifier.onSizeChanged { size ->
@@ -111,7 +97,12 @@ fun MemeDecorField(
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(2.dp))
-                    .border(width = 1.dp, color = Color.White)
+                    .then(
+                        if (isSelected) Modifier.border(
+                            width = 1.dp,
+                            color = Color.White
+                        ) else Modifier
+                    )
                     .padding(8.dp),
                 text = memeDecor.text.asString(),
                 style = TextStyle(
@@ -121,7 +112,7 @@ fun MemeDecorField(
                 )
             )
 
-            if (isFocused) {
+            if (isSelected) {
                 IconButton(
                     modifier = Modifier
                         .offset {
@@ -154,9 +145,7 @@ private fun EditableTextFieldPreview() {
         memeDecor = MemeDecor(text = UiText.DynamicString("Write something")),
         parentWidth = 100,
         parentHeight = 100,
-        onFocusCleared = {
-
-        },
+        isSelected = true,
         onClick = {
 
         },
