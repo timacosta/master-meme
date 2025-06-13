@@ -4,21 +4,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import com.acostim.mastermeme.core.presentation.UiText
-import com.acostim.mastermeme.memeEditor.presentation.state.CreateMemeState
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorEvent
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorState
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
-import com.acostim.mastermeme.memeEditor.presentation.state.fonts
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 
-class MemeEditorViewModel : ViewModel() {
+class MemeEditorViewModel(
+    private val undoRedoManager: UndoRedoManager,
+) : ViewModel() {
 
-    private val _state: MutableStateFlow<CreateMemeState> = MutableStateFlow(CreateMemeState())
+    private val _state: MutableStateFlow<MemeEditorState> = MutableStateFlow(MemeEditorState())
     val state = _state.asStateFlow()
 
     private val _events: Channel<MemeEditorEvent> = Channel()
@@ -27,16 +28,22 @@ class MemeEditorViewModel : ViewModel() {
     fun onAction(action: MemeEditorAction) {
         when (action) {
             is MemeEditorAction.AddMemeDecor -> addMemeDecor(memeDecor = action.memeDecor)
+
             is MemeEditorAction.RemoveMemeDecor -> removeMemeDecor(memeDecor = action.memeDecor)
+
             is MemeEditorAction.UpdateMemeDecorOffset -> updateMemeDecorOffset(
                 selectedMemeDecor = action.memeDecor,
                 newOffset = action.newOffset
             )
 
             is MemeEditorAction.OnFocusCleared -> onMemeDecorFocusCleared()
+
             is MemeEditorAction.OpenStylingOptions -> onMemeDecorClick(action.memeDecor)
+
             is MemeEditorAction.OpenEditDialog -> openTextEditDialog(action.memeDecor)
+
             is MemeEditorAction.CloseEditDialog -> closeEditDialog()
+
             is MemeEditorAction.UpdateText -> changeTextOnConfirmation(
                 id = _state.value.selectedMemeDecor?.id,
                 value = action.text
@@ -48,16 +55,40 @@ class MemeEditorViewModel : ViewModel() {
 
             is MemeEditorAction.UpdateMemeDecorSize -> onMemeDecorSizeUpdate(action.size)
 
+            is MemeEditorAction.Undo -> undo()
+
+            is MemeEditorAction.Redo -> redo()
+
+        }
+    }
+
+    private fun saveCurrentState() {
+        undoRedoManager.addAction(_state.value.copy())
+    }
+
+    private fun undo() {
+        val previousState = undoRedoManager.undo(currentState = _state.value)
+        if (previousState != null) {
+            _state.value = previousState
+        }
+    }
+
+    private fun redo() {
+        val nextState = undoRedoManager.redo(currentState = _state.value)
+        if (nextState != null) {
+            _state.value = nextState
         }
     }
 
     private fun addMemeDecor(memeDecor: MemeDecor) {
+        saveCurrentState()
         _state.update {
             it.copy(memeDecors = it.memeDecors + memeDecor)
         }
     }
 
     private fun removeMemeDecor(memeDecor: MemeDecor) {
+        saveCurrentState()
         _state.update { currentState ->
             currentState.copy(memeDecors = currentState.memeDecors.filter { it.id != memeDecor.id })
         }
@@ -74,6 +105,7 @@ class MemeEditorViewModel : ViewModel() {
     }
 
     private fun onMemeFontUpdate(font: MemeFont) {
+        saveCurrentState()
         _state.update { currentState ->
             val decorToEdit = currentState.selectedMemeDecor
             val updatedList = currentState.memeDecors.map {
@@ -90,6 +122,7 @@ class MemeEditorViewModel : ViewModel() {
     }
 
     private fun onMemeColorUpdate(color: Color) {
+        saveCurrentState()
         _state.update { currentState ->
             val decorToEdit = currentState.selectedMemeDecor
 
@@ -108,6 +141,7 @@ class MemeEditorViewModel : ViewModel() {
     }
 
     private fun onMemeDecorSizeUpdate(fontSize: Float) {
+        saveCurrentState()
         _state.update { currentState ->
             val decorToEdit = currentState.selectedMemeDecor
 
@@ -141,7 +175,7 @@ class MemeEditorViewModel : ViewModel() {
             _state.update {
                 it.copy(
                     selectedMemeDecor = decorToEdit,
-                    showEditDialog = true
+                    isInEditMode = true
                 )
             }
         }
@@ -150,7 +184,7 @@ class MemeEditorViewModel : ViewModel() {
     private fun closeEditDialog() {
         _state.update {
             it.copy(
-                showEditDialog = false
+                isInEditMode = false
             )
         }
     }
@@ -160,6 +194,7 @@ class MemeEditorViewModel : ViewModel() {
     }
 
     private fun changeTextOnConfirmation(id: String?, value: String) {
+        saveCurrentState()
         _state.update { currentState ->
             val updatedList = currentState.memeDecors.map { memeDecor ->
                 if (memeDecor.id == id) {

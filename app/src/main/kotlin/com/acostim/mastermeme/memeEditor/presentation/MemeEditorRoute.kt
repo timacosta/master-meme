@@ -116,11 +116,17 @@ fun MemeEditorRoute(
                 viewModel.onAction(
                     MemeEditorAction.UpdateMemeDecorSize(size)
                 )
+            },
+            undo = {
+                viewModel.onAction(MemeEditorAction.Undo)
+            },
+            redo = {
+                viewModel.onAction(MemeEditorAction.Redo)
             }
         )
     }
 
-    if (state.showEditDialog) {
+    if (state.isInEditMode) {
         EditMemeDecorDialog(
             value = viewModel.getCurrentMemeDecorText(state.selectedMemeDecor).asString(),
             onDismiss = {

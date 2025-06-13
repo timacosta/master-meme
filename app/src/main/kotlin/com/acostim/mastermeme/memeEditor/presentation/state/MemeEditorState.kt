@@ -8,12 +8,12 @@ import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.ui.theme.Impact
 import java.util.UUID
 
-data class CreateMemeState(
+data class MemeEditorState(
     val memeDecors: List<MemeDecor> = emptyList(),
     val selectedMemeDecor: MemeDecor? = null,
     val isStylingOptionsVisible: Boolean = false,
     val isSavingOptionsVisible: Boolean = true,
-    val showEditDialog: Boolean = false
+    val isInEditMode: Boolean = false
 )
 
 data class MemeDecor(

@@ -61,10 +61,15 @@ fun MemeDecorField(
                     onDrag = { change, dragAmount ->
                         change.consume()
 
-                        val newOffsetX = (accumulatedOffset.x + dragAmount.x)
-                            .coerceIn(0f, (parentWidth - textFieldSize.width).toFloat())
-                        val newOffsetY = (accumulatedOffset.y + dragAmount.y)
-                            .coerceIn(0f, (parentHeight - textFieldSize.height).toFloat())
+                        val newOffsetX = (accumulatedOffset.x + dragAmount.x).coerceIn(
+                            minimumValue = 0f,
+                            maximumValue = (parentWidth - textFieldSize.width).toFloat()
+                        )
+
+                        val newOffsetY = (accumulatedOffset.y + dragAmount.y).coerceIn(
+                            minimumValue = 0f,
+                            maximumValue = (parentHeight - textFieldSize.height).toFloat()
+                        )
 
                         accumulatedOffset = IntOffset(newOffsetX.toInt(), newOffsetY.toInt())
 

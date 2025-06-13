@@ -53,7 +53,9 @@ fun MemeEditorScreen(
     updateMemeDecorOffset: (MemeDecor, IntOffset) -> Unit,
     onFontSelection: (MemeFont) -> Unit,
     onColorSelection: (Color) -> Unit,
-    onSizeSelection: (Float) -> Unit
+    onSizeSelection: (Float) -> Unit,
+    undo: () -> Unit,
+    redo: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -128,8 +130,12 @@ fun MemeEditorScreen(
         if (isSaveOptionsBarVisible) {
             MemeSaveOptionsBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                onUndo = {},
-                onRedo = {},
+                onUndo = {
+                    undo()
+                },
+                onRedo = {
+                    redo()
+                },
                 onAddMemeDecor = {
                     onAddMemeDecor()
                 },
@@ -186,7 +192,9 @@ private fun MemeEditorScreenPreview() {
                 },
                 onSizeSelection = {
 
-                }
+                },
+                undo = {},
+                redo = {}
             )
         }
     }
