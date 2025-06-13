@@ -13,7 +13,8 @@ data class MemeEditorState(
     val selectedMemeDecor: MemeDecor? = null,
     val isStylingOptionsVisible: Boolean = false,
     val isSavingOptionsVisible: Boolean = true,
-    val isInEditMode: Boolean = false
+    val isInEditMode: Boolean = false,
+    val isExitDialogShown: Boolean = false
 )
 
 data class MemeDecor(

@@ -3,6 +3,7 @@ package com.acostim.mastermeme.memeEditor.presentation
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MemeEditorViewModel(
     private val undoRedoManager: UndoRedoManager,
@@ -58,6 +60,12 @@ class MemeEditorViewModel(
             is MemeEditorAction.Undo -> undo()
 
             is MemeEditorAction.Redo -> redo()
+
+            is MemeEditorAction.OnExitDialog -> showExitDialog()
+
+            is MemeEditorAction.OnDismissExitDialog -> dismissExitDialog()
+
+            is MemeEditorAction.OnConfirmExitDialog -> confirmExitDialog()
 
         }
     }
@@ -223,6 +231,28 @@ class MemeEditorViewModel(
                 }
             }
             currentState.copy(memeDecors = updatedList)
+        }
+    }
+
+    private fun showExitDialog() {
+        _state.update {
+            it.copy(
+                isExitDialogShown = true
+            )
+        }
+    }
+
+    private fun dismissExitDialog() {
+        _state.update {
+            it.copy(
+                isExitDialogShown = false
+            )
+        }
+    }
+
+    private fun confirmExitDialog() {
+        viewModelScope.launch {
+            _events.send(MemeEditorEvent.NavigateBack)
         }
     }
 }

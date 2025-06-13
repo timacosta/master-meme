@@ -29,4 +29,10 @@ sealed interface MemeEditorAction {
     data object Undo : MemeEditorAction
 
     data object Redo : MemeEditorAction
+
+    data object OnExitDialog: MemeEditorAction
+
+    data object OnDismissExitDialog : MemeEditorAction
+
+    data object OnConfirmExitDialog: MemeEditorAction
 }
