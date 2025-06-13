@@ -134,6 +134,15 @@ fun MemeEditorRoute(
             },
             redo = {
                 viewModel.onAction(MemeEditorAction.Redo)
+            },
+            onDiscardChanges = {
+                viewModel.onAction(MemeEditorAction.DiscardLatestChange)
+            },
+            onConfirmChanges = {
+
+            },
+            onSaveMeme = {
+
             }
         )
     }

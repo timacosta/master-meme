@@ -51,7 +51,9 @@ fun MemeStyleEditBar(
     initialFontSizeValue: Float,
     onFontSelection: (MemeFont) -> Unit,
     onColorSelection: (Color) -> Unit,
-    onSizeSelection: (Float) -> Unit
+    onSizeSelection: (Float) -> Unit,
+    onDiscardChanges: () -> Unit,
+    onConfirmChanges: () -> Unit
 ) {
 
     var isTextStyleOptionsVisible by remember { mutableStateOf(true) }
@@ -94,7 +96,7 @@ fun MemeStyleEditBar(
         ) {
             CloseButton(
                 onClick = {
-                    //TODO
+                    onDiscardChanges()
                 }
             )
 
@@ -127,7 +129,7 @@ fun MemeStyleEditBar(
             Spacer(Modifier.width(12.dp))
 
             AcceptButton(onClick = {
-                //TODO
+                onConfirmChanges()
             })
         }
     }
@@ -291,6 +293,12 @@ private fun MemeStyleEditBarPreview() {
 
                 },
                 onSizeSelection = {
+
+                },
+                onConfirmChanges = {
+
+                },
+                onDiscardChanges = {
 
                 }
             )

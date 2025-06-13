@@ -1,41 +1,34 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
-import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorState
+import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 
 class UndoRedoManager {
-    private val undoStack = ArrayDeque<MemeEditorState>()
-    private val redoStack = ArrayDeque<MemeEditorState>()
+    private val undoStack = ArrayDeque<List<MemeDecor>>()
+    private val redoStack = ArrayDeque<List<MemeDecor>>()
 
-    fun addAction(action: MemeEditorState) {
-        undoStack.addLast(action)
+    fun addAction(memeDecors: List<MemeDecor>) {
+        undoStack.addLast(memeDecors.map { it.copy() })
         redoStack.clear()
     }
 
-    fun undo(currentState: MemeEditorState): MemeEditorState? {
+    fun addToRedoStack(memeDecors: List<MemeDecor>) {
+        redoStack.addLast(memeDecors.map { it.copy() })
+    }
+
+    fun undo(): List<MemeDecor>? {
         return if (undoStack.isNotEmpty()) {
-            val previousState = undoStack.removeLast()
-            redoStack.addLast(currentState)
-
-            previousState.copy(
-                selectedMemeDecor = currentState.selectedMemeDecor,
-                isStylingOptionsVisible = currentState.isStylingOptionsVisible,
-                isSavingOptionsVisible = currentState.isSavingOptionsVisible,
-                isInEditMode = currentState.isInEditMode
-            )
+            val previousDecors = undoStack.removeLast()
+            previousDecors
         } else null
     }
 
-    fun redo(currentState: MemeEditorState): MemeEditorState? {
+    fun redo(): List<MemeDecor>? {
         return if (redoStack.isNotEmpty()) {
-            val nextState = redoStack.removeLast()
-            undoStack.addLast(currentState)
-
-            nextState.copy(
-                selectedMemeDecor = currentState.selectedMemeDecor,
-                isStylingOptionsVisible = currentState.isStylingOptionsVisible,
-                isSavingOptionsVisible = currentState.isSavingOptionsVisible,
-                isInEditMode = currentState.isInEditMode
-            )
+            val nextDecors = redoStack.removeLast()
+            nextDecors
         } else null
     }
+
+    fun canUndo(): Boolean = undoStack.isNotEmpty()
+    fun canRedo(): Boolean = redoStack.isNotEmpty()
 }

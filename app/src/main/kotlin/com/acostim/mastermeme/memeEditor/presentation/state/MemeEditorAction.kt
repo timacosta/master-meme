@@ -30,6 +30,8 @@ sealed interface MemeEditorAction {
 
     data object Redo : MemeEditorAction
 
+    data object DiscardLatestChange: MemeEditorAction
+
     data object OnExitDialog: MemeEditorAction
 
     data object OnDismissExitDialog : MemeEditorAction

@@ -55,7 +55,10 @@ fun MemeEditorScreen(
     onColorSelection: (Color) -> Unit,
     onSizeSelection: (Float) -> Unit,
     undo: () -> Unit,
-    redo: () -> Unit
+    redo: () -> Unit,
+    onDiscardChanges: () -> Unit,
+    onConfirmChanges: () -> Unit,
+    onSaveMeme: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -139,7 +142,9 @@ fun MemeEditorScreen(
                 onAddMemeDecor = {
                     onAddMemeDecor()
                 },
-                onSaveMeme = {}
+                onSaveMeme = {
+                    onSaveMeme()
+                }
             )
         }
 
@@ -155,6 +160,12 @@ fun MemeEditorScreen(
                 initialFontSizeValue = selectedMemeDecor?.fontSize ?: 0f,
                 onSizeSelection = { size ->
                     onSizeSelection(size)
+                },
+                onDiscardChanges = {
+                    onDiscardChanges()
+                },
+                onConfirmChanges = {
+                    onConfirmChanges()
                 }
             )
         }
@@ -194,7 +205,14 @@ private fun MemeEditorScreenPreview() {
 
                 },
                 undo = {},
-                redo = {}
+                redo = {},
+                onSaveMeme = {},
+                onDiscardChanges = {
+
+                },
+                onConfirmChanges = {
+
+                }
             )
         }
     }

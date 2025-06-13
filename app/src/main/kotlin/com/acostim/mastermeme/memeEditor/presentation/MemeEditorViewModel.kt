@@ -67,24 +67,34 @@ class MemeEditorViewModel(
 
             is MemeEditorAction.OnConfirmExitDialog -> confirmExitDialog()
 
+            is MemeEditorAction.DiscardLatestChange -> discardLatestChanges()
+
         }
     }
 
     private fun saveCurrentState() {
-        undoRedoManager.addAction(_state.value.copy())
+        undoRedoManager.addAction(_state.value.memeDecors)
     }
 
     private fun undo() {
-        val previousState = undoRedoManager.undo(currentState = _state.value)
-        if (previousState != null) {
-            _state.value = previousState
+        val currentDecors = _state.value.memeDecors
+        val previousDecors = undoRedoManager.undo()
+
+        if (previousDecors != null) {
+            undoRedoManager.addToRedoStack(currentDecors)
+
+            _state.update { it.copy(memeDecors = previousDecors) }
         }
     }
 
     private fun redo() {
-        val nextState = undoRedoManager.redo(currentState = _state.value)
-        if (nextState != null) {
-            _state.value = nextState
+        val currentDecors = _state.value.memeDecors
+        val nextDecors = undoRedoManager.redo()
+
+        if (nextDecors != null) {
+            undoRedoManager.addAction(currentDecors)
+
+            _state.update { it.copy(memeDecors = nextDecors) }
         }
     }
 
@@ -253,6 +263,21 @@ class MemeEditorViewModel(
     private fun confirmExitDialog() {
         viewModelScope.launch {
             _events.send(MemeEditorEvent.NavigateBack)
+        }
+    }
+
+    private fun discardLatestChanges() {
+        val previousDecors = undoRedoManager.undo()
+        if (previousDecors != null) {
+            _state.update { currentState ->
+                currentState.copy(
+                    memeDecors = previousDecors,
+                    selectedMemeDecor = null,
+                    isStylingOptionsVisible = false,
+                    isSavingOptionsVisible = true,
+                    isInEditMode = false
+                )
+            }
         }
     }
 }
