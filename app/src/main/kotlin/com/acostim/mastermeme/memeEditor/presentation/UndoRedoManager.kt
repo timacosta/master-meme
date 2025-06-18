@@ -28,7 +28,4 @@ class UndoRedoManager {
             nextDecors
         } else null
     }
-
-    fun canUndo(): Boolean = undoStack.isNotEmpty()
-    fun canRedo(): Boolean = redoStack.isNotEmpty()
 }

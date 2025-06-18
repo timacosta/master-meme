@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.acostim.mastermeme.core.data.MemesRepositoryImpl
 import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class MemeEditorViewModel(
     private val undoRedoManager: UndoRedoManager,
+    private val memesRepository: MemesRepositoryImpl
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MemeEditorState> = MutableStateFlow(MemeEditorState())
@@ -29,6 +31,10 @@ class MemeEditorViewModel(
 
     fun onAction(action: MemeEditorAction) {
         when (action) {
+            is MemeEditorAction.StoreBackgroundImage -> {
+                _state.update { it.copy(backgroundBitmap = action.bitmap) }
+            }
+
             is MemeEditorAction.AddMemeDecor -> addMemeDecor(memeDecor = action.memeDecor)
 
             is MemeEditorAction.RemoveMemeDecor -> removeMemeDecor(memeDecor = action.memeDecor)
@@ -69,6 +75,12 @@ class MemeEditorViewModel(
 
             is MemeEditorAction.DiscardLatestChange -> discardLatestChanges()
 
+            is MemeEditorAction.SaveMeme -> viewModelScope.launch {
+                memesRepository.saveMeme(
+                    graphicsLayer = action.graphicsLayer,
+                    fileName = "meme_${System.currentTimeMillis()}"
+                )
+            }
         }
     }
 

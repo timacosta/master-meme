@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeEditor.presentation.state
 
+import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.IntOffset
@@ -9,6 +10,7 @@ import com.acostim.mastermeme.ui.theme.Impact
 import java.util.UUID
 
 data class MemeEditorState(
+    val backgroundBitmap: Bitmap? = null,
     val memeDecors: List<MemeDecor> = emptyList(),
     val selectedMemeDecor: MemeDecor? = null,
     val isStylingOptionsVisible: Boolean = false,

@@ -1,6 +1,5 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,9 +12,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,13 +35,17 @@ fun MemeEditorRoute(
     viewModel: MemeEditorViewModel = koinViewModel()
 ) {
 
-    var bitmap: Bitmap? by remember { mutableStateOf(null) }
     val context = LocalContext.current
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(path) {
-        bitmap = loadBitmapFromResources(context, path)
+        val bitmap = loadBitmapFromResources(context, path)
+        if (bitmap != null) {
+            viewModel.onAction(
+                MemeEditorAction.StoreBackgroundImage(bitmap)
+            )
+        }
     }
 
     ObserveAsEvent(viewModel.events) { event ->
@@ -75,7 +75,7 @@ fun MemeEditorRoute(
         },
     ) { innerPadding ->
         MemeEditorScreen(
-            bitmap = bitmap,
+            bitmap = state.backgroundBitmap,
             modifier = Modifier.padding(innerPadding),
             memeDecors = state.memeDecors,
             selectedMemeDecor = state.selectedMemeDecor,
@@ -139,10 +139,10 @@ fun MemeEditorRoute(
                 viewModel.onAction(MemeEditorAction.DiscardLatestChange)
             },
             onConfirmChanges = {
-
+                viewModel.onAction(MemeEditorAction.OnFocusCleared)
             },
-            onSaveMeme = {
-
+            onSaveMeme = { graphicsLayer ->
+                viewModel.onAction(MemeEditorAction.SaveMeme(graphicsLayer))
             }
         )
     }

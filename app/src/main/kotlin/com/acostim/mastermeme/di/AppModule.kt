@@ -1,7 +1,7 @@
 package com.acostim.mastermeme.di
 
 import com.acostim.mastermeme.memeEditor.presentation.MemeEditorViewModel
-import com.acostim.mastermeme.core.data.MemesTemplateRepository
+import com.acostim.mastermeme.core.data.MemesRepositoryImpl
 import com.acostim.mastermeme.memeEditor.presentation.UndoRedoManager
 import com.acostim.mastermeme.memeList.presentation.MemeListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -16,5 +16,5 @@ val presentationModule = module {
 }
 
 val dataModule = module {
-    singleOf(::MemesTemplateRepository)
+    singleOf(::MemesRepositoryImpl)
 }

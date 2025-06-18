@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,8 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.layer.GraphicsLayer
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
@@ -58,9 +63,10 @@ fun MemeEditorScreen(
     redo: () -> Unit,
     onDiscardChanges: () -> Unit,
     onConfirmChanges: () -> Unit,
-    onSaveMeme: () -> Unit
+    onSaveMeme: (graphicsLayer: GraphicsLayer) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val graphicsLayer = rememberGraphicsLayer()
 
     Box(
         modifier
@@ -86,7 +92,12 @@ fun MemeEditorScreen(
             bitmap?.let { bitmap ->
                 val imageRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
 
-                Box {
+                Box(
+                    Modifier.drawWithContent {
+                        graphicsLayer.record { this@drawWithContent.drawContent() }
+                        drawLayer(graphicsLayer)
+                    }
+                ) {
                     var imageWidth by remember { mutableIntStateOf(0) }
                     var imageHeight by remember { mutableIntStateOf(0) }
 
@@ -97,9 +108,10 @@ fun MemeEditorScreen(
                             .onSizeChanged { size ->
                                 imageWidth = size.width
                                 imageHeight = size.height
-                            },
+                            }
+                            .width(bitmap.width.dp)
+                        ,
                         bitmap = bitmap.asImageBitmap(),
-                        contentScale = ContentScale.Crop,
                         contentDescription = null
                     )
 
@@ -143,7 +155,7 @@ fun MemeEditorScreen(
                     onAddMemeDecor()
                 },
                 onSaveMeme = {
-                    onSaveMeme()
+                    onSaveMeme(graphicsLayer)
                 }
             )
         }
