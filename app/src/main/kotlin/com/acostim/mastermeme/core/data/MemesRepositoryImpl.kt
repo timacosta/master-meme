@@ -10,14 +10,16 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-class MemesRepositoryImpl(private val context: Context) : MemeRepository {
+class MemesRepositoryImpl(
+    private val context: Context
+) : MemeRepository {
 
     companion object {
         private const val TEMPLATE_DIR = "templates"
         private const val PNG = ".png"
     }
 
-    override suspend fun getMemeTemplates(): List<String> {
+    override suspend fun getMemeTemplates(): List<Meme> {
         return withContext(Dispatchers.IO) {
             context.assets.list("$TEMPLATE_DIR/")?.map { name ->
                 "$TEMPLATE_DIR/$name"
@@ -34,7 +36,7 @@ class MemesRepositoryImpl(private val context: Context) : MemeRepository {
 
             val file = File(context.filesDir, "$fileName$PNG")
             FileOutputStream(file).use {
-                imageBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it)
+                imageBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 85, it)
             }
         }
     }
