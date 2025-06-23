@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.memeList.presentation
+package com.acostim.mastermeme.memeList
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

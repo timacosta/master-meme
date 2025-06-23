@@ -2,6 +2,7 @@ package com.acostim.mastermeme.core.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.acostim.mastermeme.core.domain.Meme
 import java.time.LocalDateTime
 
 @Entity(tableName = "memes")
@@ -13,3 +14,12 @@ data class MemeEntity(
     val date: LocalDateTime = LocalDateTime.now(),
     val isFavorite: Boolean = false
 )
+
+fun MemeEntity.toDomain(): Meme {
+    return Meme(
+        uid = uid,
+        path = path,
+        date = date,
+        isFavorite = isFavorite
+    )
+}

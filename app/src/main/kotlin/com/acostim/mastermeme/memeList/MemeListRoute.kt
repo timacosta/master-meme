@@ -1,4 +1,4 @@
-package com.acostim.mastermeme.memeList.presentation
+package com.acostim.mastermeme.memeList
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -31,6 +31,7 @@ fun MemeListRoute(
 ) {
 
     val memeTemplates by viewModel.memeTemplates.collectAsStateWithLifecycle()
+    val savedMemes by viewModel.savedMemes.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -58,7 +59,10 @@ fun MemeListRoute(
         }
     ) { innerPadding ->
 
-        MemeListScreen(Modifier.padding(innerPadding))
+        MemeListScreen(
+            modifier = Modifier.padding(innerPadding),
+            memes = savedMemes
+        )
 
         if (showBottomSheet) {
             MemeBottomSheet(

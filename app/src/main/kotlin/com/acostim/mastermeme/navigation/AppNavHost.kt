@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.acostim.mastermeme.memeEditor.presentation.MemeEditorRoute
-import com.acostim.mastermeme.memeList.presentation.MemeListRoute
+import com.acostim.mastermeme.memeList.MemeListRoute
 import kotlinx.serialization.Serializable
 
 
