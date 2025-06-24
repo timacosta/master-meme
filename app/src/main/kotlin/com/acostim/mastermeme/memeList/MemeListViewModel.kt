@@ -23,16 +23,22 @@ class MemeListViewModel(
     val savedMemes: StateFlow<List<MemeListUi>> = _savedMemes
 
     init {
-        convertFromUriToBitmap()
+        loadSavedMemes()
     }
 
-    fun loadMemeTemplates() {
+    fun onAction(action: MemeListAction) {
+        when (action) {
+            is MemeListAction.LoadMemeTemplates -> loadMemeTemplates()
+        }
+    }
+
+    private fun loadMemeTemplates() {
         viewModelScope.launch {
             _memeTemplates.value = repository.getMemeTemplates()
         }
     }
 
-    private fun convertFromUriToBitmap() {
+    private fun loadSavedMemes() {
         viewModelScope.launch {
             repository.getSavedMemes().collect { memes ->
                 val uiMemes = memes.map { meme ->

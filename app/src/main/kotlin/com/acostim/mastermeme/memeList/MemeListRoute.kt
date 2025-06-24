@@ -48,7 +48,7 @@ fun MemeListRoute(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.loadMemeTemplates()
+                viewModel.onAction(MemeListAction.LoadMemeTemplates)
                 showBottomSheet = true
             }) {
                 Icon(
