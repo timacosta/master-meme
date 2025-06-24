@@ -14,9 +14,10 @@ data class MemeEditorState(
     val memeDecors: List<MemeDecor> = emptyList(),
     val selectedMemeDecor: MemeDecor? = null,
     val isStylingOptionsVisible: Boolean = false,
-    val isSavingOptionsVisible: Boolean = true,
+    val isPrimaryActionBarVisible: Boolean = true,
     val isInEditMode: Boolean = false,
-    val isExitDialogShown: Boolean = false
+    val isExitDialogShown: Boolean = false,
+    val isSavingOptionsVisible: Boolean = false
 )
 
 data class MemeDecor(

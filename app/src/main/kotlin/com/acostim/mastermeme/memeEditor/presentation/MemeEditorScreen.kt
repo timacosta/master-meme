@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +29,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +36,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeDecorField
-import com.acostim.mastermeme.memeEditor.presentation.components.MemeSaveOptionsBar
+import com.acostim.mastermeme.memeEditor.presentation.components.MemePrimaryActionsBar
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeStyleEditBar
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
@@ -48,7 +49,7 @@ fun MemeEditorScreen(
     modifier: Modifier = Modifier,
     memeDecors: List<MemeDecor>,
     selectedMemeDecor: MemeDecor?,
-    isSaveOptionsBarVisible: Boolean,
+    isPrimaryActionBarVisible: Boolean,
     isStyleOptionsBarVisible: Boolean,
     onAddMemeDecor: () -> Unit,
     onFocusCleared: () -> Unit,
@@ -63,6 +64,8 @@ fun MemeEditorScreen(
     redo: () -> Unit,
     onDiscardChanges: () -> Unit,
     onConfirmChanges: () -> Unit,
+    onOpenSavingOptions: () -> Unit,
+    isSavingOptionsVisible: Boolean,
     onSaveMeme: (graphicsLayer: GraphicsLayer) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
@@ -87,7 +90,7 @@ fun MemeEditorScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = if (isSaveOptionsBarVisible || isStyleOptionsBarVisible) 80.dp else 0.dp)
+                .padding(bottom = if (isPrimaryActionBarVisible || isStyleOptionsBarVisible) 80.dp else 0.dp)
         ) {
             bitmap?.let { bitmap ->
                 val imageRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
@@ -109,8 +112,7 @@ fun MemeEditorScreen(
                                 imageWidth = size.width
                                 imageHeight = size.height
                             }
-                            .width(bitmap.width.dp)
-                        ,
+                            .width(bitmap.width.dp),
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = null
                     )
@@ -142,8 +144,8 @@ fun MemeEditorScreen(
             }
         }
 
-        if (isSaveOptionsBarVisible) {
-            MemeSaveOptionsBar(
+        if (isPrimaryActionBarVisible) {
+            MemePrimaryActionsBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onUndo = {
                     undo()
@@ -154,10 +156,14 @@ fun MemeEditorScreen(
                 onAddMemeDecor = {
                     onAddMemeDecor()
                 },
-                onSaveMeme = {
-                    onSaveMeme(graphicsLayer)
+                onOpenSavingOptions = {
+                    onOpenSavingOptions()
                 }
             )
+        }
+
+        if (isSavingOptionsVisible) {
+            MemeSaveBottomSheet()
         }
 
         if (isStyleOptionsBarVisible) {
@@ -184,6 +190,20 @@ fun MemeEditorScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MemeSaveBottomSheet() {
+    ModalBottomSheet(
+        modifier = Modifier
+            .fillMaxSize(),
+        onDismissRequest = {
+            //TODO
+        }
+    ) {
+
+    }
+}
+
 @Preview
 @Composable
 private fun MemeEditorScreenPreview() {
@@ -198,7 +218,7 @@ private fun MemeEditorScreenPreview() {
                 memeDecors = emptyList(),
                 selectedMemeDecor = null,
                 isStyleOptionsBarVisible = true,
-                isSaveOptionsBarVisible = false,
+                isPrimaryActionBarVisible = false,
                 onAddMemeDecor = {},
                 onRemoveMemeDecor = {},
                 onFocusCleared = {},
@@ -222,6 +242,10 @@ private fun MemeEditorScreenPreview() {
                 onDiscardChanges = {
 
                 },
+                onOpenSavingOptions = {
+
+                },
+                isSavingOptionsVisible = false,
                 onConfirmChanges = {
 
                 }

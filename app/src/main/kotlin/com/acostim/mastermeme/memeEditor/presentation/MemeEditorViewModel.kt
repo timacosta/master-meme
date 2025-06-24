@@ -75,12 +75,22 @@ class MemeEditorViewModel(
 
             is MemeEditorAction.DiscardLatestChange -> discardLatestChanges()
 
+            is MemeEditorAction.OpenSavingOptions -> openSavingOptions()
+
             is MemeEditorAction.SaveMeme -> viewModelScope.launch {
                 memesRepository.saveMeme(
                     graphicsLayer = action.graphicsLayer,
                     fileName = "meme_${System.currentTimeMillis()}"
                 )
             }
+        }
+    }
+
+    private fun openSavingOptions() {
+        _state.update {
+            it.copy(
+                isSavingOptionsVisible = true
+            )
         }
     }
 
@@ -129,7 +139,7 @@ class MemeEditorViewModel(
             currentState.copy(
                 selectedMemeDecor = memeDecor,
                 isStylingOptionsVisible = true,
-                isSavingOptionsVisible = false
+                isPrimaryActionBarVisible = false
             )
         }
     }
@@ -192,7 +202,7 @@ class MemeEditorViewModel(
     private fun onMemeDecorFocusCleared() {
         _state.update { currentState ->
             currentState.copy(
-                isSavingOptionsVisible = true,
+                isPrimaryActionBarVisible = true,
                 isStylingOptionsVisible = false,
                 selectedMemeDecor = null
             )
@@ -286,7 +296,7 @@ class MemeEditorViewModel(
                     memeDecors = previousDecors,
                     selectedMemeDecor = null,
                     isStylingOptionsVisible = false,
-                    isSavingOptionsVisible = true,
+                    isPrimaryActionBarVisible = true,
                     isInEditMode = false
                 )
             }

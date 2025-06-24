@@ -79,7 +79,7 @@ fun MemeEditorRoute(
             modifier = Modifier.padding(innerPadding),
             memeDecors = state.memeDecors,
             selectedMemeDecor = state.selectedMemeDecor,
-            isSaveOptionsBarVisible = state.isSavingOptionsVisible,
+            isPrimaryActionBarVisible = state.isPrimaryActionBarVisible,
             isStyleOptionsBarVisible = state.isStylingOptionsVisible,
             onAddMemeDecor = {
                 viewModel.onAction(
@@ -141,6 +141,10 @@ fun MemeEditorRoute(
             onConfirmChanges = {
                 viewModel.onAction(MemeEditorAction.OnFocusCleared)
             },
+            onOpenSavingOptions = {
+                viewModel.onAction(MemeEditorAction.OpenSavingOptions)
+            },
+            isSavingOptionsVisible = state.isSavingOptionsVisible,
             onSaveMeme = { graphicsLayer ->
                 viewModel.onAction(MemeEditorAction.SaveMeme(graphicsLayer))
             }

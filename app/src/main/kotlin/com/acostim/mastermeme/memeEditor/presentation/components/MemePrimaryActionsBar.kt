@@ -33,12 +33,12 @@ import com.acostim.mastermeme.ui.theme.PrimaryContainer
 import com.acostim.mastermeme.ui.theme.SurfaceContainer
 
 @Composable
-fun MemeSaveOptionsBar(
+fun MemePrimaryActionsBar(
     modifier: Modifier = Modifier,
     onUndo: () -> Unit,
     onRedo: () -> Unit,
     onAddMemeDecor: () -> Unit,
-    onSaveMeme: () -> Unit
+    onOpenSavingOptions: () -> Unit
 ) {
     BoxWithConstraints(
         modifier = modifier
@@ -64,12 +64,12 @@ fun MemeSaveOptionsBar(
             if (isCompact) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     AddTextButton(onAddMemeDecor)
-                    SaveButton(onSaveMeme)
+                    SaveButton(onOpenSavingOptions)
                 }
             } else {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     AddTextButton(onAddMemeDecor)
-                    SaveButton(onSaveMeme)
+                    SaveButton(onOpenSavingOptions)
                 }
             }
 
@@ -110,11 +110,11 @@ private fun SaveButton(onClick: () -> Unit) {
 private fun MemeEditorBottomBarPreview() {
     MastermemeTheme {
         Surface {
-            MemeSaveOptionsBar(
+            MemePrimaryActionsBar(
                 onUndo = {},
                 onRedo = {},
                 onAddMemeDecor = {},
-                onSaveMeme = {}
+                onOpenSavingOptions = {}
             )
         }
     }
