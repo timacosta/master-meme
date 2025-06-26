@@ -2,9 +2,12 @@ package com.acostim.mastermeme.memeEditor.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,9 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 import com.acostim.mastermeme.ui.theme.SecondaryFixedDim
@@ -57,65 +62,66 @@ private fun MemeSaveContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Row(
-            modifier = Modifier.clickable {
-                onSaveToDevice()
-            },
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_download),
-                tint = Color.Unspecified,
-                contentDescription = null
-            )
+        MemeOptionRow(
+            iconRes = R.drawable.ic_download,
+            title = "Save to device",
+            subtitle = "Save created meme in the Files of your device",
+            onClick = onSaveToDevice
+        )
 
-            Column {
-                Text(
-                    text = "Save to device",
-                    fontWeight = FontWeight.Bold,
+        MemeOptionRow(
+            iconRes = R.drawable.ic_share,
+            title = "Share the meme",
+            subtitle = "Share your meme or open it in the other App",
+            onClick = onShareMeme
+        )
+    }
+}
+
+@Composable
+private fun MemeOptionRow(
+    iconRes: Int,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = SecondaryFixedDim
+        )
+
+        Column {
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
                     color = SecondaryFixedDim
                 )
+            )
 
-                Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
 
-                Text(
-                    "Save created meme in the Files of your device",
+            Text(
+                text = subtitle,
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light,
                     color = Color.White
                 )
-            }
-        }
-
-        Row(
-            modifier = Modifier.clickable {
-                onShareMeme()
-            },
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_share),
-                contentDescription = null,
-                tint = SecondaryFixedDim
             )
-
-            Column {
-                Text(
-                    text = "Share the meme",
-                    fontWeight = FontWeight.Bold,
-                    color = SecondaryFixedDim
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    text = "Share your meme or open it in the other App",
-                )
-            }
         }
     }
 }
