@@ -144,6 +144,9 @@ fun MemeEditorRoute(
             onOpenSavingOptions = {
                 viewModel.onAction(MemeEditorAction.OpenSavingOptions)
             },
+            onDismissSavingOptions = {
+                viewModel.onAction(MemeEditorAction.DissmissSavingOptions)
+            },
             isSavingOptionsVisible = state.isSavingOptionsVisible,
             onSaveMeme = { graphicsLayer ->
                 viewModel.onAction(MemeEditorAction.SaveMeme(graphicsLayer))

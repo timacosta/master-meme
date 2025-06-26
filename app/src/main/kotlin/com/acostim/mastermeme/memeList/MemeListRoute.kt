@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeList
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -17,10 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
-import com.acostim.mastermeme.ui.theme.Background
+import com.acostim.mastermeme.ui.theme.Surface
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,13 +38,17 @@ fun MemeListRoute(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.memes_list_topbar))
+                    Text(
+                        text = stringResource(R.string.memes_list_topbar),
+                        color = Color.White
+                    )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Background
+                    containerColor = Surface
                 )
             )
         },

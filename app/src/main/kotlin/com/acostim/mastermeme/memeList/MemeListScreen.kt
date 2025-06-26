@@ -1,6 +1,7 @@
 package com.acostim.mastermeme.memeList
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.memeList.state.MemeListUi
+import com.acostim.mastermeme.ui.theme.Background
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 
 @Composable
@@ -34,7 +36,7 @@ fun MemeListScreen(
     modifier: Modifier = Modifier,
     memes: List<MemeListUi>
 ) {
-    Box(modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize().background(Background)) {
         if (memes.isEmpty()) {
             EmptyMemeScreen(modifier = Modifier.align(Alignment.Center))
         } else {
@@ -54,7 +56,6 @@ fun MemeListScreen(
 
                         }
                     ) {
-
                         meme.bitmap?.let { bitmap ->
                             Image(
                                 bitmap = bitmap.asImageBitmap(),

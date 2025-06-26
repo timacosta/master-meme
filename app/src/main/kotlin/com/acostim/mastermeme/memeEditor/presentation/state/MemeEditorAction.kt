@@ -45,5 +45,7 @@ sealed interface MemeEditorAction {
 
     data object OpenSavingOptions: MemeEditorAction
 
+    data object DissmissSavingOptions: MemeEditorAction
+
     data class SaveMeme(val graphicsLayer: GraphicsLayer) : MemeEditorAction
 }

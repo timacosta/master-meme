@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.createBitmap
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeDecorField
 import com.acostim.mastermeme.memeEditor.presentation.components.MemePrimaryActionsBar
+import com.acostim.mastermeme.memeEditor.presentation.components.MemeSaveBottomSheet
 import com.acostim.mastermeme.memeEditor.presentation.components.MemeStyleEditBar
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeFont
@@ -65,6 +64,7 @@ fun MemeEditorScreen(
     onDiscardChanges: () -> Unit,
     onConfirmChanges: () -> Unit,
     onOpenSavingOptions: () -> Unit,
+    onDismissSavingOptions: () -> Unit,
     isSavingOptionsVisible: Boolean,
     onSaveMeme: (graphicsLayer: GraphicsLayer) -> Unit
 ) {
@@ -163,7 +163,17 @@ fun MemeEditorScreen(
         }
 
         if (isSavingOptionsVisible) {
-            MemeSaveBottomSheet()
+            MemeSaveBottomSheet(
+                onDismissRequest = {
+                    onDismissSavingOptions()
+                },
+                onShareMeme = {
+
+                },
+                onSaveToDevice = {
+
+                }
+            )
         }
 
         if (isStyleOptionsBarVisible) {
@@ -190,19 +200,7 @@ fun MemeEditorScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MemeSaveBottomSheet() {
-    ModalBottomSheet(
-        modifier = Modifier
-            .fillMaxSize(),
-        onDismissRequest = {
-            //TODO
-        }
-    ) {
 
-    }
-}
 
 @Preview
 @Composable
@@ -243,6 +241,9 @@ private fun MemeEditorScreenPreview() {
 
                 },
                 onOpenSavingOptions = {
+
+                },
+                onDismissSavingOptions = {
 
                 },
                 isSavingOptionsVisible = false,

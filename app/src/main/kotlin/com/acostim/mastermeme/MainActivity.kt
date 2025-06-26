@@ -1,5 +1,6 @@
 package com.acostim.mastermeme
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,23 +8,33 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.acostim.mastermeme.ui.theme.Background
+import androidx.core.view.WindowCompat
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.auto(Background.toArgb(), Background.toArgb())
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
         )
+        super.onCreate(savedInstanceState)
+
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
+            val currentView = LocalView.current.context
             MastermemeTheme {
+                SideEffect {
+                    val window = (currentView as Activity).window
+                    WindowCompat.getInsetsController(window, window.decorView)
+                        .isAppearanceLightNavigationBars = false // inverse for dark themes
+                }
                 MasterMemeApp(modifier = Modifier.fillMaxSize())
             }
         }

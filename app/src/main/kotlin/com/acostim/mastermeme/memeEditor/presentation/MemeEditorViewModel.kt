@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.data.MemesRepositoryImpl
+import com.acostim.mastermeme.core.domain.Meme
 import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
@@ -77,6 +78,8 @@ class MemeEditorViewModel(
 
             is MemeEditorAction.OpenSavingOptions -> openSavingOptions()
 
+            is MemeEditorAction.DissmissSavingOptions -> dismissSavingOptions()
+
             is MemeEditorAction.SaveMeme -> viewModelScope.launch {
                 memesRepository.saveMeme(
                     graphicsLayer = action.graphicsLayer,
@@ -90,6 +93,14 @@ class MemeEditorViewModel(
         _state.update {
             it.copy(
                 isSavingOptionsVisible = true
+            )
+        }
+    }
+
+    private fun dismissSavingOptions() {
+        _state.update {
+            it.copy(
+                isSavingOptionsVisible = false
             )
         }
     }
