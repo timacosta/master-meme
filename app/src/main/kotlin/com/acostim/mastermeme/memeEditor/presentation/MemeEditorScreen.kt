@@ -171,7 +171,7 @@ fun MemeEditorScreen(
 
                 },
                 onSaveToDevice = {
-
+                    onSaveMeme(graphicsLayer)
                 }
             )
         }

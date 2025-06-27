@@ -1,11 +1,11 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.data.MemesRepositoryImpl
-import com.acostim.mastermeme.core.domain.Meme
 import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
@@ -80,12 +80,18 @@ class MemeEditorViewModel(
 
             is MemeEditorAction.DissmissSavingOptions -> dismissSavingOptions()
 
-            is MemeEditorAction.SaveMeme -> viewModelScope.launch {
-                memesRepository.saveMeme(
-                    graphicsLayer = action.graphicsLayer,
-                    fileName = "meme_${System.currentTimeMillis()}"
-                )
-            }
+            is MemeEditorAction.SaveMeme -> saveMeme(action.graphicsLayer)
+        }
+    }
+
+    private fun saveMeme(graphicsLayer: GraphicsLayer) {
+        viewModelScope.launch {
+            memesRepository.saveMeme(
+                graphicsLayer = graphicsLayer,
+                fileName = "meme_${System.currentTimeMillis()}"
+            )
+
+            _events.send(MemeEditorEvent.NavigateBack)
         }
     }
 
