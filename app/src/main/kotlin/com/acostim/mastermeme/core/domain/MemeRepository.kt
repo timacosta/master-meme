@@ -1,5 +1,7 @@
 package com.acostim.mastermeme.core.domain
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import kotlinx.coroutines.flow.Flow
 
@@ -9,8 +11,13 @@ interface MemeRepository {
 
     suspend fun getMemeTemplates(): List<String>
 
-    suspend fun saveMeme(
-        graphicsLayer: GraphicsLayer,
+    suspend fun saveMemeToStorage(
+        bitmap: Bitmap,
         fileName: String
     )
+
+    suspend fun saveMemeToCache(
+        bitmap: Bitmap,
+        fileName: String
+    ): Uri?
 }

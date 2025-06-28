@@ -2,8 +2,8 @@ package com.acostim.mastermeme.core.data
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.layer.GraphicsLayer
+import android.net.Uri
+import androidx.core.content.FileProvider
 import com.acostim.mastermeme.core.data.database.MemeDao
 import com.acostim.mastermeme.core.data.database.MemeEntity
 import com.acostim.mastermeme.core.data.database.toDomain
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
 
 class MemesRepositoryImpl(
     private val context: Context,
@@ -42,16 +41,15 @@ class MemesRepositoryImpl(
         }
     }
 
-    override suspend fun saveMeme(
-        graphicsLayer: GraphicsLayer,
+    override suspend fun saveMemeToStorage(
+        bitmap: Bitmap,
         fileName: String
     ) {
         withContext(Dispatchers.IO) {
-            val imageBitmap = graphicsLayer.toImageBitmap()
-
-            val file = File(context.filesDir, "$fileName$PNG")
-            FileOutputStream(file).use {
-                imageBitmap.asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 85, it)
+            val file = File(context.filesDir, "$fileName$PNG").apply {
+                outputStream().use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, out)
+                }
             }
 
             val memeEntity = MemeEntity(
@@ -60,6 +58,29 @@ class MemesRepositoryImpl(
             )
 
             dao.insert(memeEntity)
+        }
+    }
+
+    override suspend fun saveMemeToCache(bitmap: Bitmap, fileName: String): Uri? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val file = File(context.cacheDir, "$fileName$PNG").apply {
+                    outputStream().use { out ->
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    }
+                }
+
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.provider",
+                    file
+                )
+
+                uri
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 }

@@ -10,8 +10,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.acostim.mastermeme.core.data.MemesRepositoryImpl
-import com.acostim.mastermeme.core.domain.Meme
+import com.acostim.mastermeme.core.domain.MemeRepository
 import com.acostim.mastermeme.core.presentation.UiText
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeEditorAction
@@ -28,7 +27,7 @@ import java.io.File
 
 class MemeEditorViewModel(
     private val undoRedoManager: UndoRedoManager,
-    private val memesRepository: MemesRepositoryImpl
+    private val memesRepository: MemeRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MemeEditorState> = MutableStateFlow(MemeEditorState())
@@ -95,8 +94,8 @@ class MemeEditorViewModel(
 
     private fun saveMeme(graphicsLayer: GraphicsLayer) {
         viewModelScope.launch {
-            memesRepository.saveMeme(
-                graphicsLayer = graphicsLayer,
+            memesRepository.saveMemeToStorage(
+                bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap(),
                 fileName = "meme_${System.currentTimeMillis()}"
             )
 
@@ -106,27 +105,21 @@ class MemeEditorViewModel(
 
     private fun shareMeme(context: Context, graphicsLayer: GraphicsLayer) {
         viewModelScope.launch {
-            val file = File(context.cacheDir, "shared_meme.png").apply {
-                outputStream().use { out ->
-                    graphicsLayer.toImageBitmap().asAndroidBitmap()
-                        .compress(Bitmap.CompressFormat.PNG, 100, out)
-                }
-            }
-
-            val uri = FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.provider",
-                file
+            val uri = memesRepository.saveMemeToCache(
+                bitmap = graphicsLayer.toImageBitmap().asAndroidBitmap(),
+                fileName = "shared_meme"
             )
 
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "image/png"
-                putExtra(Intent.EXTRA_STREAM, uri)
+            uri?.let {
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "image/png"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+
+                context.startActivity(Intent.createChooser(intent, "Share Meme"))
             }
-
-            context.startActivity(Intent.createChooser(intent, "Share Meme"))
         }
-
     }
 
     private fun openSavingOptions() {
