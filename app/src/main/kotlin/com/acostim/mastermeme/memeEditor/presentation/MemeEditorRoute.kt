@@ -1,11 +1,8 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,7 +19,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
 import com.acostim.mastermeme.core.presentation.ObserveAsEvent
-import com.acostim.mastermeme.core.presentation.components.LoadingIndicator
 import com.acostim.mastermeme.memeEditor.presentation.components.EditMemeDecorDialog
 import com.acostim.mastermeme.memeEditor.presentation.components.ExitConfirmationDialog
 import com.acostim.mastermeme.memeEditor.presentation.state.MemeDecor
@@ -154,6 +150,9 @@ fun MemeEditorRoute(
             isSavingOptionsVisible = state.isSavingOptionsVisible,
             onSaveMeme = { graphicsLayer ->
                 viewModel.onAction(MemeEditorAction.SaveMeme(graphicsLayer))
+            },
+            onShareMeme = { context, graphicsLayer ->
+                viewModel.onAction(MemeEditorAction.ShareMeme(context, graphicsLayer))
             }
         )
     }

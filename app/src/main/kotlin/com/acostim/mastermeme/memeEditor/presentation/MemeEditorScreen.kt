@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeEditor.presentation
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -66,8 +68,10 @@ fun MemeEditorScreen(
     onOpenSavingOptions: () -> Unit,
     onDismissSavingOptions: () -> Unit,
     isSavingOptionsVisible: Boolean,
-    onSaveMeme: (graphicsLayer: GraphicsLayer) -> Unit
+    onSaveMeme: (graphicsLayer: GraphicsLayer) -> Unit,
+    onShareMeme: (context: Context, graphicsLayer: GraphicsLayer) -> Unit,
 ) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val graphicsLayer = rememberGraphicsLayer()
 
@@ -168,7 +172,7 @@ fun MemeEditorScreen(
                     onDismissSavingOptions()
                 },
                 onShareMeme = {
-
+                    onShareMeme(context, graphicsLayer)
                 },
                 onSaveToDevice = {
                     onSaveMeme(graphicsLayer)
@@ -199,7 +203,6 @@ fun MemeEditorScreen(
         }
     }
 }
-
 
 
 @Preview
@@ -247,6 +250,9 @@ private fun MemeEditorScreenPreview() {
 
                 },
                 isSavingOptionsVisible = false,
+                onShareMeme = { _, _ ->
+
+                },
                 onConfirmChanges = {
 
                 }

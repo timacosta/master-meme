@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeEditor.presentation.state
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.GraphicsLayer
@@ -43,9 +44,11 @@ sealed interface MemeEditorAction {
 
     data object OnConfirmExitDialog : MemeEditorAction
 
-    data object OpenSavingOptions: MemeEditorAction
+    data object OpenSavingOptions : MemeEditorAction
 
-    data object DissmissSavingOptions: MemeEditorAction
+    data object DissmissSavingOptions : MemeEditorAction
 
     data class SaveMeme(val graphicsLayer: GraphicsLayer) : MemeEditorAction
+
+    data class ShareMeme(val context: Context, val graphicsLayer: GraphicsLayer) : MemeEditorAction
 }
