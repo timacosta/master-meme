@@ -29,6 +29,9 @@ class MemeListViewModel(
     fun onAction(action: MemeListAction) {
         when (action) {
             is MemeListAction.LoadMemeTemplates -> loadMemeTemplates()
+            is MemeListAction.OnFavoriteClick -> {
+
+            }
         }
     }
 

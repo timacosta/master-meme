@@ -12,4 +12,7 @@ interface MemeDao {
 
     @Query("SELECT * FROM memes")
     fun getSavedMemes(): Flow<List<MemeEntity>>
+
+    @Query("UPDATE memes SET isFavorite = :isFavorite WHERE uid = :id")
+    suspend fun updateFavoriteStatus(id: Int, isFavorite: Boolean) //TODO
 }

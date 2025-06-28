@@ -2,7 +2,6 @@ package com.acostim.mastermeme.core.domain
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.ui.graphics.layer.GraphicsLayer
 import kotlinx.coroutines.flow.Flow
 
 interface MemeRepository {

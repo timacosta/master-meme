@@ -67,7 +67,14 @@ fun MemeListRoute(
 
         MemeListScreen(
             modifier = Modifier.padding(innerPadding),
-            memes = savedMemes
+            memes = savedMemes,
+            onFavoriteClick = { meme ->
+                viewModel.onAction(
+                    MemeListAction.OnFavoriteClick(
+                        isFavorite = !meme.isFavorite
+                    )
+                )
+            }
         )
 
         if (showBottomSheet) {
