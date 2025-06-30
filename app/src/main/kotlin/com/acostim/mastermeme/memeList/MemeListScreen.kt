@@ -19,15 +19,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.acostim.mastermeme.memeList.components.MemeItem
-import com.acostim.mastermeme.memeList.state.MemeListUi
+import com.acostim.mastermeme.memeList.state.MemeItemUi
 import com.acostim.mastermeme.ui.theme.Background
 import com.acostim.mastermeme.ui.theme.MastermemeTheme
 
 @Composable
 fun MemeListScreen(
     modifier: Modifier = Modifier,
-    memes: List<MemeListUi>,
-    onFavoriteClick: (MemeListUi) -> Unit,
+    memes: List<MemeItemUi>,
+    onFavoriteClick: (MemeItemUi) -> Unit,
 ) {
     Box(
         modifier

@@ -5,10 +5,13 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.domain.MemeRepository
+import com.acostim.mastermeme.memeList.state.MemeItemUi
 import com.acostim.mastermeme.memeList.state.MemeListUi
+import com.acostim.mastermeme.memeList.state.SelectedSortOption
 import com.acostim.mastermeme.memeList.state.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
@@ -16,11 +19,10 @@ import java.io.FileInputStream
 class MemeListViewModel(
     private val repository: MemeRepository,
 ) : ViewModel() {
-    private val _memeTemplates = MutableStateFlow(emptyList<String>())
-    val memeTemplates: StateFlow<List<String>> = _memeTemplates
+    private val _state = MutableStateFlow(MemeListUi())
+    val state = _state.asStateFlow()
 
-    private val _savedMemes = MutableStateFlow(emptyList<MemeListUi>())
-    val savedMemes: StateFlow<List<MemeListUi>> = _savedMemes
+    private var currentSortOption = SelectedSortOption.FAVOURITES
 
     init {
         loadSavedMemes()
@@ -33,12 +35,31 @@ class MemeListViewModel(
                 id = action.id,
                 isFavorite = action.isFavorite
             )
+
+            is MemeListAction.OpenSortOptions -> openSortOptions()
+
+            is MemeListAction.ToggleSortOptionsVisibility -> {
+                _state.update {
+                    it.copy(
+                        isSortOptionsVisible = !_state.value.isSortOptionsVisible
+                    )
+                }
+            }
+
+            is MemeListAction.ToggleSortOption -> {
+                _state.update {
+                    it.copy(selectedSortOption = action.selectedSortOption)
+                }
+                sortSavedMemes(action.selectedSortOption)
+            }
         }
     }
 
     private fun loadMemeTemplates() {
         viewModelScope.launch {
-            _memeTemplates.value = repository.getMemeTemplates()
+            _state.update {
+                it.copy(templatesPathList = repository.getMemeTemplates())
+            }
         }
     }
 
@@ -50,7 +71,11 @@ class MemeListViewModel(
                     meme.toUiModel(bitmap)
                 }
 
-                _savedMemes.value = uiMemes
+                val sortedMemes = sortMemes(uiMemes, currentSortOption)
+
+                _state.update {
+                    it.copy(savedMemes = sortedMemes)
+                }
             }
         }
     }
@@ -74,6 +99,33 @@ class MemeListViewModel(
             repository.isFavorite(
                 id = id,
                 isFavorite = isFavorite
+            )
+        }
+    }
+
+    private fun openSortOptions() {
+        _state.update {
+            it.copy(isSortOptionsVisible = true)
+        }
+    }
+
+    private fun sortSavedMemes(selectedSortOption: SelectedSortOption) {
+        currentSortOption = selectedSortOption
+        _state.update { currentState ->
+            val sortedList = sortMemes(currentState.savedMemes, selectedSortOption)
+            currentState.copy(savedMemes = sortedList)
+        }
+    }
+
+    private fun sortMemes(
+        list: List<MemeItemUi>,
+        sort: SelectedSortOption
+    ): List<MemeItemUi> {
+        return when (sort) {
+            SelectedSortOption.NEWEST -> list.sortedByDescending { it.date }
+            SelectedSortOption.FAVOURITES -> list.sortedWith(
+                compareByDescending<MemeItemUi> { it.isFavorite }
+                    .thenByDescending { it.date }
             )
         }
     }

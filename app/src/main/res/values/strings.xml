@@ -11,4 +11,6 @@
     <string name="dialog_title">Text</string>
     <string name="dialog_cancel_btn">Cancel</string>
     <string name="dialog_ok_btn">Ok</string>
+    <string name="favourites_first">Favourites first</string>
+    <string name="newest_first">Newest first</string>
 </resources>

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
+import com.acostim.mastermeme.memeList.components.SortDropdownMenu
 import com.acostim.mastermeme.ui.theme.Surface
 import org.koin.androidx.compose.koinViewModel
 
@@ -31,9 +32,7 @@ fun MemeListRoute(
     navigateToCreateMeme: (String) -> Unit,
     viewModel: MemeListViewModel = koinViewModel(),
 ) {
-
-    val memeTemplates by viewModel.memeTemplates.collectAsStateWithLifecycle()
-    val savedMemes by viewModel.savedMemes.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -49,7 +48,19 @@ fun MemeListRoute(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Surface
-                )
+                ),
+                actions = {
+                    SortDropdownMenu(
+                        expanded = state.isSortOptionsVisible,
+                        selectedSortOption = state.selectedSortOption,
+                        onExpand = {
+                            viewModel.onAction(MemeListAction.ToggleSortOptionsVisibility(state.isSortOptionsVisible))
+                        },
+                        onSelectSortOption = { sortOption ->
+                            viewModel.onAction(MemeListAction.ToggleSortOption(sortOption))
+                        }
+                    )
+                }
             )
         },
         floatingActionButton = {
@@ -67,7 +78,7 @@ fun MemeListRoute(
 
         MemeListScreen(
             modifier = Modifier.padding(innerPadding),
-            memes = savedMemes,
+            memes = state.savedMemes,
             onFavoriteClick = { meme ->
                 viewModel.onAction(
                     MemeListAction.OnFavoriteClick(
@@ -81,7 +92,7 @@ fun MemeListRoute(
         if (showBottomSheet) {
             MemeBottomSheet(
                 sheetState = sheetState,
-                memeTemplates = memeTemplates,
+                memeTemplates = state.templatesPathList,
                 showBottomSheet = {
                     showBottomSheet = it
                 },
@@ -90,3 +101,4 @@ fun MemeListRoute(
         }
     }
 }
+
