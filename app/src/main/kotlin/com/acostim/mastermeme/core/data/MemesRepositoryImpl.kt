@@ -83,4 +83,8 @@ class MemesRepositoryImpl(
             }
         }
     }
+
+    override suspend fun isFavorite(id: Int, isFavorite: Boolean) {
+        dao.updateFavoriteStatus(id = id, isFavorite = isFavorite)
+    }
 }

@@ -71,6 +71,7 @@ fun MemeListRoute(
             onFavoriteClick = { meme ->
                 viewModel.onAction(
                     MemeListAction.OnFavoriteClick(
+                        id = meme.uid,
                         isFavorite = !meme.isFavorite
                     )
                 )

@@ -14,5 +14,5 @@ interface MemeDao {
     fun getSavedMemes(): Flow<List<MemeEntity>>
 
     @Query("UPDATE memes SET isFavorite = :isFavorite WHERE uid = :id")
-    suspend fun updateFavoriteStatus(id: Int, isFavorite: Boolean) //TODO
+    suspend fun updateFavoriteStatus(id: Int, isFavorite: Boolean)
 }

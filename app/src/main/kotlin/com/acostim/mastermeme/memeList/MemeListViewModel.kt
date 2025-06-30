@@ -29,9 +29,10 @@ class MemeListViewModel(
     fun onAction(action: MemeListAction) {
         when (action) {
             is MemeListAction.LoadMemeTemplates -> loadMemeTemplates()
-            is MemeListAction.OnFavoriteClick -> {
-
-            }
+            is MemeListAction.OnFavoriteClick -> markAsFavorite(
+                id = action.id,
+                isFavorite = action.isFavorite
+            )
         }
     }
 
@@ -62,6 +63,18 @@ class MemeListViewModel(
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun markAsFavorite(
+        id: Int,
+        isFavorite: Boolean,
+    ) {
+        viewModelScope.launch {
+            repository.isFavorite(
+                id = id,
+                isFavorite = isFavorite
+            )
         }
     }
 }

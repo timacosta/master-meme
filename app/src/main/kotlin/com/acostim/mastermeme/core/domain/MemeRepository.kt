@@ -19,4 +19,6 @@ interface MemeRepository {
         bitmap: Bitmap,
         fileName: String
     ): Uri?
+
+    suspend fun isFavorite(id: Int, isFavorite: Boolean)
 }
