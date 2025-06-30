@@ -1,6 +1,7 @@
 package com.acostim.mastermeme.memeList
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +29,9 @@ fun MemeListScreen(
     modifier: Modifier = Modifier,
     memes: List<MemeItemUi>,
     onFavoriteClick: (MemeItemUi) -> Unit,
+    isSelectedMode: Boolean,
+    onLongPress: (MemeItemUi) -> Unit,
+    onSelectedMeme: (MemeItemUi) -> Unit
 ) {
     Box(
         modifier
@@ -48,10 +52,15 @@ fun MemeListScreen(
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(1f),
-                        onClick = {
+                            .aspectRatio(1f)
+                            .combinedClickable(
+                                onClick = {
 
-                        }
+                                },
+                                onLongClick = {
+                                    onLongPress(meme)
+                                }
+                            ),
                     ) {
                         meme.bitmap?.let { bitmap ->
                             MemeItem(
@@ -59,6 +68,11 @@ fun MemeListScreen(
                                 isFavorite = meme.isFavorite,
                                 onFavoriteClick = {
                                     onFavoriteClick(meme)
+                                },
+                                isSelectedMode = isSelectedMode,
+                                isMemeSelected = meme.isSelected,
+                                onSelectedMeme = {
+                                    onSelectedMeme(meme)
                                 }
                             )
                         }
@@ -76,6 +90,13 @@ fun HomeScreenPreview() {
         MemeListScreen(
             memes = emptyList(),
             onFavoriteClick = {
+
+            },
+            onLongPress = {
+
+            },
+            isSelectedMode = true,
+            onSelectedMeme = {
 
             }
         )

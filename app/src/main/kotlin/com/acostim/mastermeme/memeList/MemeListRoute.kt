@@ -86,6 +86,13 @@ fun MemeListRoute(
                         isFavorite = !meme.isFavorite
                     )
                 )
+            },
+            onLongPress = { meme ->
+                viewModel.onAction(MemeListAction.OnLongPress(meme))
+            },
+            isSelectedMode = state.isSelectedMode,
+            onSelectedMeme = { meme ->
+                viewModel.onAction(MemeListAction.OnSelectedMeme(meme))
             }
         )
 

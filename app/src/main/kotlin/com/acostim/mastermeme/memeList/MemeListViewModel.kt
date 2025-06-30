@@ -52,6 +52,27 @@ class MemeListViewModel(
                 }
                 sortSavedMemes(action.selectedSortOption)
             }
+
+            is MemeListAction.OnLongPress -> {
+                _state.update {
+                    it.copy(isSelectedMode = true)
+                }
+            }
+
+            is MemeListAction.OnSelectedMeme -> {
+                _state.update { memesList ->
+                    val selectedMeme = memesList.savedMemes.find { it.uid == action.meme.uid }
+                    val updatedList = memesList.savedMemes.map { meme ->
+                        if (meme == selectedMeme) {
+                            meme.copy(isSelected = ! meme.isSelected)
+                        } else {
+                            meme
+                        }
+                    }
+
+                    memesList.copy(savedMemes = updatedList)
+                }
+            }
         }
     }
 

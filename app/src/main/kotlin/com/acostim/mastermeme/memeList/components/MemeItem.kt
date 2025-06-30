@@ -5,6 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -24,13 +27,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.acostim.mastermeme.R
+import com.acostim.mastermeme.ui.theme.Primary
 
 @Composable
 fun MemeItem(
     modifier: Modifier = Modifier,
     bitmap: ImageBitmap,
     isFavorite: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    isSelectedMode: Boolean,
+    isMemeSelected: Boolean,
+    onSelectedMeme: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -58,6 +65,25 @@ fun MemeItem(
             contentScale = ContentScale.Crop,
         )
 
+        if (isSelectedMode) {
+            IconButton(
+                modifier = Modifier
+                    .size(60.dp)
+                    .zIndex(1f)
+                    .align(Alignment.TopEnd),
+                onClick = {
+                    onSelectedMeme()
+                }
+            ) {
+                Icon(
+                    imageVector = if (isMemeSelected) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                    tint = Primary,
+                    contentDescription = null
+                )
+            }
+        }
+
+
         IconButton(
             modifier = Modifier
                 .size(60.dp)
@@ -81,7 +107,7 @@ fun MemeItem(
 private fun PreviewMemeItem() {
     val bitmap = remember {
         Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888).apply {
-            eraseColor(Color.Cyan.toArgb())
+            eraseColor(Color.Gray.toArgb())
         }
     }
 
@@ -89,6 +115,9 @@ private fun PreviewMemeItem() {
         modifier = Modifier.size(300.dp, 300.dp),
         bitmap = bitmap.asImageBitmap(),
         isFavorite = false,
-        onFavoriteClick = {}
+        isSelectedMode = true,
+        isMemeSelected = true,
+        onFavoriteClick = {},
+        onSelectedMeme = {}
     )
 }
