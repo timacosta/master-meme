@@ -57,22 +57,12 @@ class MemeListViewModel(
                 _state.update {
                     it.copy(isSelectedMode = true)
                 }
+                toggleMemeSelection(action.meme.uid)
             }
 
-            is MemeListAction.OnSelectedMeme -> {
-                _state.update { memesList ->
-                    val selectedMeme = memesList.savedMemes.find { it.uid == action.meme.uid }
-                    val updatedList = memesList.savedMemes.map { meme ->
-                        if (meme == selectedMeme) {
-                            meme.copy(isSelected = ! meme.isSelected)
-                        } else {
-                            meme
-                        }
-                    }
+            is MemeListAction.OnSelectedMeme -> toggleMemeSelection(action.meme.uid)
 
-                    memesList.copy(savedMemes = updatedList)
-                }
-            }
+            is MemeListAction.CancelSelection -> cancelSelection()
         }
     }
 
@@ -147,6 +137,30 @@ class MemeListViewModel(
             SelectedSortOption.FAVOURITES -> list.sortedWith(
                 compareByDescending<MemeItemUi> { it.isFavorite }
                     .thenByDescending { it.date }
+            )
+        }
+    }
+
+    private fun toggleMemeSelection(uid: Int) {
+        _state.update { memesList ->
+            val updatedList = memesList.savedMemes.map { meme ->
+                if (meme.uid == uid) {
+                    meme.copy(isSelected = !meme.isSelected)
+                } else {
+                    meme
+                }
+            }
+            memesList.copy(savedMemes = updatedList)
+        }
+    }
+
+    private fun cancelSelection() {
+        _state.update {
+            it.copy(
+                isSelectedMode = false,
+                savedMemes = it.savedMemes.map {
+                    it.copy(isSelected = false)
+                }
             )
         }
     }

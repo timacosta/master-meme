@@ -16,5 +16,7 @@ sealed interface MemeListAction {
 
     data class OnLongPress(val meme: MemeItemUi) : MemeListAction
 
-    data class OnSelectedMeme(val meme: MemeItemUi): MemeListAction
+    data class OnSelectedMeme(val meme: MemeItemUi) : MemeListAction
+
+    data object CancelSelection : MemeListAction
 }

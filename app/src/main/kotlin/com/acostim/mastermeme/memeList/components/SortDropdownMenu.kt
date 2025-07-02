@@ -20,7 +20,7 @@ import com.acostim.mastermeme.ui.theme.MastermemeTheme
 @Composable
 fun SortDropdownMenu(
     expanded: Boolean,
-    onExpand: (Boolean) -> Unit,
+    onExpand: () -> Unit,
     selectedSortOption: SelectedSortOption,
     onSelectSortOption: (SelectedSortOption) -> Unit
 ) {
@@ -33,7 +33,7 @@ fun SortDropdownMenu(
 
         Icon(
             modifier = Modifier.clickable {
-                onExpand(expanded)
+                onExpand()
             },
             imageVector = Icons.Default.ArrowDropDown,
             contentDescription = null
@@ -42,13 +42,13 @@ fun SortDropdownMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = {
-                onExpand(false)
+                onExpand()
             },
         ) {
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.favourites_first)) },
                 onClick = {
-                    onExpand(expanded)
+                    onExpand()
                     onSelectSortOption(SelectedSortOption.FAVOURITES)
                 }
             )
@@ -56,7 +56,7 @@ fun SortDropdownMenu(
             DropdownMenuItem(
                 text = { Text(text = stringResource(R.string.newest_first)) },
                 onClick = {
-                    onExpand(expanded)
+                    onExpand()
                     onSelectSortOption(SelectedSortOption.NEWEST)
                 }
             )

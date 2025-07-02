@@ -22,7 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
+import com.acostim.mastermeme.memeList.components.SelectTopBar
 import com.acostim.mastermeme.memeList.components.SortDropdownMenu
+import com.acostim.mastermeme.memeList.components.SortTopBar
 import com.acostim.mastermeme.ui.theme.Surface
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,29 +41,32 @@ fun MemeListRoute(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.memes_list_topbar),
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Surface
-                ),
-                actions = {
-                    SortDropdownMenu(
-                        expanded = state.isSortOptionsVisible,
-                        selectedSortOption = state.selectedSortOption,
-                        onExpand = {
-                            viewModel.onAction(MemeListAction.ToggleSortOptionsVisibility(state.isSortOptionsVisible))
-                        },
-                        onSelectSortOption = { sortOption ->
-                            viewModel.onAction(MemeListAction.ToggleSortOption(sortOption))
-                        }
-                    )
-                }
-            )
+            if (state.isSelectedMode) {
+                SelectTopBar(
+                    selectedCount = state.savedMemes.filter { it.isSelected }.size,
+                    onCancel = {
+                        viewModel.onAction(MemeListAction.CancelSelection)
+                    },
+                    onShare = {
+
+                    },
+                    onDelete = {
+
+                    }
+                )
+            } else {
+                SortTopBar(
+                    expanded = state.isSortOptionsVisible,
+                    selectedSortOption = state.selectedSortOption,
+                    onExpand = {
+                        viewModel.onAction(MemeListAction.ToggleSortOptionsVisibility(state.isSortOptionsVisible))
+                    },
+                    onSelect = { sortOption ->
+                        viewModel.onAction(MemeListAction.ToggleSortOption(sortOption))
+                    }
+
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
