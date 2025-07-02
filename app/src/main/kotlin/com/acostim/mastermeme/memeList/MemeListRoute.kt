@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.acostim.mastermeme.R
@@ -34,6 +35,7 @@ fun MemeListRoute(
     navigateToCreateMeme: (String) -> Unit,
     viewModel: MemeListViewModel = koinViewModel(),
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -48,7 +50,7 @@ fun MemeListRoute(
                         viewModel.onAction(MemeListAction.CancelSelection)
                     },
                     onShare = {
-
+                        viewModel.onAction(MemeListAction.ShareSelectedMemes(context))
                     },
                     onDelete = {
 

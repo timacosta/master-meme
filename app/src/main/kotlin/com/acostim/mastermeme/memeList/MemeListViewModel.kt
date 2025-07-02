@@ -1,7 +1,10 @@
 package com.acostim.mastermeme.memeList
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acostim.mastermeme.core.domain.MemeRepository
@@ -63,6 +66,8 @@ class MemeListViewModel(
             is MemeListAction.OnSelectedMeme -> toggleMemeSelection(action.meme.uid)
 
             is MemeListAction.CancelSelection -> cancelSelection()
+
+            is MemeListAction.ShareSelectedMemes -> shareSelectedMemes(action.context)
         }
     }
 
@@ -162,6 +167,43 @@ class MemeListViewModel(
                     it.copy(isSelected = false)
                 }
             )
+        }
+    }
+
+    private fun shareSelectedMemes(context: Context) {
+        viewModelScope.launch {
+            val selectedMemes = _state.value.savedMemes.filter { it.isSelected }
+
+            if (selectedMemes.isEmpty()) return@launch
+
+            val uris = mutableListOf<Uri>()
+
+            selectedMemes.forEach { meme ->
+                meme.bitmap?.let { bitmap ->
+                    val uri = repository.saveMemeToCache(
+                        bitmap = bitmap,
+                        fileName = "shared_meme_${meme.uid}"
+                    )
+                    uri?.let { uris.add(it) }
+                }
+            }
+
+            if (uris.isNotEmpty()) {
+                val intent = Intent().apply {
+                    if (uris.size == 1) {
+                        action = Intent.ACTION_SEND
+                        type = "image/png"
+                        putExtra(Intent.EXTRA_STREAM, uris.first())
+                    } else {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        type = "image/png"
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                    }
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+
+                context.startActivity(Intent.createChooser(intent, "Share Memes"))
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.acostim.mastermeme.memeList
 
+import android.content.Context
 import com.acostim.mastermeme.memeList.state.MemeItemUi
 import com.acostim.mastermeme.memeList.state.SelectedSortOption
 
@@ -19,4 +20,6 @@ sealed interface MemeListAction {
     data class OnSelectedMeme(val meme: MemeItemUi) : MemeListAction
 
     data object CancelSelection : MemeListAction
+
+    data class ShareSelectedMemes(val context: Context): MemeListAction
 }
