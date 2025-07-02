@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-<h3 align="center">Master Memel</h3>
+<h3 align="center">Master Meme</h3>
 </div>
 
 Master Meme is a meme creation app and the monthly Coding for December 2024 of the PL Coding Mobile Dev Campus
