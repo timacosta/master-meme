@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider
 import com.acostim.mastermeme.core.data.database.MemeDao
 import com.acostim.mastermeme.core.data.database.MemeEntity
 import com.acostim.mastermeme.core.data.database.toDomain
+import com.acostim.mastermeme.core.data.database.toEntity
 import com.acostim.mastermeme.core.domain.Meme
 import com.acostim.mastermeme.core.domain.MemeRepository
 import kotlinx.coroutines.Dispatchers
@@ -86,5 +87,9 @@ class MemesRepositoryImpl(
 
     override suspend fun isFavorite(id: Int, isFavorite: Boolean) {
         dao.updateFavoriteStatus(id = id, isFavorite = isFavorite)
+    }
+
+    override suspend fun delete(ids: List<Int>) {
+        dao.deleteMeme(ids)
     }
 }

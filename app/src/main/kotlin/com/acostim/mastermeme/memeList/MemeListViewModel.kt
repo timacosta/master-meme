@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.acostim.mastermeme.core.domain.Meme
 import com.acostim.mastermeme.core.domain.MemeRepository
 import com.acostim.mastermeme.memeList.state.MemeItemUi
 import com.acostim.mastermeme.memeList.state.MemeListUi
@@ -68,6 +69,8 @@ class MemeListViewModel(
             is MemeListAction.CancelSelection -> cancelSelection()
 
             is MemeListAction.ShareSelectedMemes -> shareSelectedMemes(action.context)
+
+            is MemeListAction.OnDelete -> delete(action.meme)
         }
     }
 
@@ -204,6 +207,14 @@ class MemeListViewModel(
 
                 context.startActivity(Intent.createChooser(intent, "Share Memes"))
             }
+        }
+    }
+
+    private fun delete(memes: List<MemeItemUi>) {
+        viewModelScope.launch {
+            repository.delete(
+                memes.map { it.uid }
+            )
         }
     }
 }

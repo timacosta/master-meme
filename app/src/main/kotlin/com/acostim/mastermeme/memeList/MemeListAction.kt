@@ -22,4 +22,6 @@ sealed interface MemeListAction {
     data object CancelSelection : MemeListAction
 
     data class ShareSelectedMemes(val context: Context): MemeListAction
+
+    data class OnDelete(val meme: List<MemeItemUi>): MemeListAction
 }

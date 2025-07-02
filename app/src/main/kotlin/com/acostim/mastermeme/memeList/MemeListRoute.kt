@@ -53,7 +53,7 @@ fun MemeListRoute(
                         viewModel.onAction(MemeListAction.ShareSelectedMemes(context))
                     },
                     onDelete = {
-
+                        viewModel.onAction(MemeListAction.OnDelete(state.savedMemes.filter { it.isSelected }))
                     }
                 )
             } else {

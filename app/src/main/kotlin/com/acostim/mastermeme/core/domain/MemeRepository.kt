@@ -21,4 +21,6 @@ interface MemeRepository {
     ): Uri?
 
     suspend fun isFavorite(id: Int, isFavorite: Boolean)
+
+    suspend fun delete(ids: List<Int>)
 }

@@ -19,6 +19,17 @@ fun MemeEntity.toDomain(): Meme {
     return Meme(
         uid = uid,
         path = path,
+        name = name,
+        date = date,
+        isFavorite = isFavorite
+    )
+}
+
+fun Meme.toEntity(): MemeEntity {
+    return MemeEntity(
+        uid = uid,
+        path = path,
+        name = name,
         date = date,
         isFavorite = isFavorite
     )
